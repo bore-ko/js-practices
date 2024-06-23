@@ -26,26 +26,24 @@ export function flipCalendar() {
   console.log(`${month}月 ${year}`.padStart(13, " "));
   console.log("日", "月", "火", "水", "木", "金", "土");
 
+  let add_spaces_to_fit_start_day = " ".repeat(firstDate.getDay() * 3, " ");
+  formattedDays += add_spaces_to_fit_start_day;
+
   for (let day = 1; day <= lastDate.getDate(); day++) {
     const currentDate = new Date();
     currentDate.setFullYear(year, month - 1, day);
 
-    if (day === 1) {
-      const add_spaces_to_fit_start_day = "".padStart(
-        currentDate.getDay() * 3,
-        " ",
-      );
-      formattedDays += add_spaces_to_fit_start_day;
+    let add_spaces_before_and_after_day = day.toString().padStart(2, " ");
+    if (currentDate.getDay() !== 6 && day !== lastDate.getDate()) {
+      add_spaces_before_and_after_day += " ";
     }
-
-    const add_spaces_before_and_after_day =
-      day.toString().padStart(2, " ") + " ";
 
     formattedDays +=
       currentDate.getDay() === 6
         ? `${add_spaces_before_and_after_day}\n`
         : add_spaces_before_and_after_day;
   }
+  formattedDays += "\n";
 
   process.stdout.write(formattedDays);
 }
