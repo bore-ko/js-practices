@@ -1,4 +1,3 @@
-export default flip_calendar;
 import minimist from "minimist";
 
 function calc_month() {
@@ -20,7 +19,7 @@ function calc_month() {
   return date;
 }
 
-function flip_calendar() {
+export function flip_calendar() {
   const first_date = calc_month();
   const year = first_date.getFullYear();
   const month = first_date.getMonth() + 1;
