@@ -26,7 +26,7 @@ export function flipCalendar() {
   console.log(`${month}月 ${year}`.padStart(13, " "));
   console.log("日", "月", "火", "水", "木", "金", "土");
 
-  let add_spaces_to_fit_start_day = " ".repeat(firstDate.getDay() * 3, " ");
+  const add_spaces_to_fit_start_day = " ".repeat(firstDate.getDay() * 3, " ");
   formattedDays += add_spaces_to_fit_start_day;
 
   for (let day = 1; day <= lastDate.getDate(); day++) {
