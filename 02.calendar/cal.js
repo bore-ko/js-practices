@@ -6,11 +6,11 @@ function calcFirstDate() {
   const argv = minimist(process.argv.slice(2));
   const date = new Date();
 
-  if (argv["y"] >= 1970 && argv["y"] <= 2100) {
+  if (1970 <= argv.y && argv.y <= 2100) {
     date.setFullYear(argv.y);
   }
 
-  if (argv["m"] >= 1 && argv["m"] <= 12) {
+  if (1 <= argv.m && argv.m <= 12) {
     date.setMonth(argv.m - 1);
   }
 
@@ -18,7 +18,7 @@ function calcFirstDate() {
   return date;
 }
 
-function flipCalendar() {
+function displayCalendar() {
   const firstDate = calcFirstDate();
   const year = firstDate.getFullYear();
   const month = firstDate.getMonth() + 1;
@@ -50,4 +50,4 @@ function flipCalendar() {
   process.stdout.write(formattedDays);
 }
 
-flipCalendar();
+displayCalendar();
