@@ -37,15 +37,15 @@ function displayCalendar() {
 
   for (let day = 1; day <= lastDate.day; day++) {
     const currentDate = DateTime.fromObject({ year, month, day });
-    let add_spaces_before_and_after_day = day.toString().padStart(2, " ");
-    if (currentDate.weekday !== 6 && day !== lastDate.day) {
-      add_spaces_before_and_after_day += " ";
-    }
+    let spacesBeforeAndAfterDay = day.toString().padStart(2, " ");
 
-    formattedDays +=
-      currentDate.weekday === 6
-        ? `${add_spaces_before_and_after_day}\n`
-        : add_spaces_before_and_after_day;
+    if (currentDate.weekday === 6) {
+      formattedDays += `${spacesBeforeAndAfterDay}\n`;
+    } else if (day !== lastDate.day) {
+      formattedDays += spacesBeforeAndAfterDay += " ";
+    } else {
+      formattedDays += spacesBeforeAndAfterDay;
+    }
   }
 
   console.log(formattedDays);
