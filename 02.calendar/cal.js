@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import minimist from "minimist";
+import { DateTime } from "luxon";
 
-function calcFirstDate() {
+function calcYearAndMonth() {
   const argv = minimist(process.argv.slice(2));
   const date = new Date();
 
@@ -14,34 +15,35 @@ function calcFirstDate() {
     date.setMonth(argv.m - 1);
   }
 
-  date.setDate(1);
-  return date;
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+
+  return { year, month };
 }
 
 function displayCalendar() {
-  const firstDate = calcFirstDate();
-  const year = firstDate.getFullYear();
-  const month = firstDate.getMonth() + 1;
-  const lastDate = new Date(year, month, 0);
+  const YearAndMonth = calcYearAndMonth();
+  const year = YearAndMonth.year;
+  const month = YearAndMonth.month;
+  const firstDate = DateTime.fromObject({ year, month });
+  const lastDate = firstDate.endOf("month");
   let formattedDays = "";
 
   console.log(`${month}月 ${year}`.padStart(13, " "));
   console.log("日", "月", "火", "水", "木", "金", "土");
 
-  const add_spaces_to_fit_start_day = " ".repeat(firstDate.getDay() * 3, " ");
+  const add_spaces_to_fit_start_day = " ".repeat(firstDate.weekday * 3, " ");
   formattedDays += add_spaces_to_fit_start_day;
 
-  for (let day = 1; day <= lastDate.getDate(); day++) {
-    const currentDate = new Date();
-    currentDate.setFullYear(year, month - 1, day);
-
+  for (let day = 1; day <= lastDate.day; day++) {
+    const currentDate = DateTime.fromObject({ year, month, day });
     let add_spaces_before_and_after_day = day.toString().padStart(2, " ");
-    if (currentDate.getDay() !== 6 && day !== lastDate.getDate()) {
+    if (currentDate.weekday !== 6 && day !== lastDate.day) {
       add_spaces_before_and_after_day += " ";
     }
 
     formattedDays +=
-      currentDate.getDay() === 6
+      currentDate.weekday === 6
         ? `${add_spaces_before_and_after_day}\n`
         : add_spaces_before_and_after_day;
   }

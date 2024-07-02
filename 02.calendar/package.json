@@ -12,6 +12,7 @@
   },
   "type": "module",
   "dependencies": {
+    "luxon": "^3.4.4",
     "minimist": "^1.2.8"
   }
 }
