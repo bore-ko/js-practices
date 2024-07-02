@@ -42,7 +42,7 @@ function displayCalendar() {
     if (currentDate.weekday === 6) {
       formattedDays += `${spacesBeforeAndAfterDay}\n`;
     } else if (day !== lastDate.day) {
-      formattedDays += spacesBeforeAndAfterDay += " ";
+      formattedDays += (spacesBeforeAndAfterDay += " ");
     } else {
       formattedDays += spacesBeforeAndAfterDay;
     }
