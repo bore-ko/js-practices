@@ -32,8 +32,8 @@ function displayCalendar() {
   console.log(`${month}月 ${year}`.padStart(13, " "));
   console.log("日", "月", "火", "水", "木", "金", "土");
 
-  const add_spaces_to_fit_start_day = " ".repeat(firstDate.weekday * 3, " ");
-  formattedDays += add_spaces_to_fit_start_day;
+  const spacesToFitStartDay = " ".repeat(firstDate.weekday * 3);
+  formattedDays += spacesToFitStartDay;
 
   for (let day = 1; day <= lastDate.day; day++) {
     const currentDate = DateTime.fromObject({ year, month, day });
