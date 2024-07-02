@@ -47,9 +47,8 @@ function displayCalendar() {
         ? `${add_spaces_before_and_after_day}\n`
         : add_spaces_before_and_after_day;
   }
-  formattedDays += "\n";
 
-  process.stdout.write(formattedDays);
+  console.log(formattedDays);
 }
 
 displayCalendar();
