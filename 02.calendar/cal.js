@@ -33,22 +33,24 @@ function displayCalendar() {
   console.log("日", "月", "火", "水", "木", "金", "土");
 
   if (firstDate.weekdayShort !== "日") {
-    const spacesToFitStartDay = " ".repeat(firstDate.weekday * 3);
-    formattedDays += spacesToFitStartDay;
+    const startDaySpaces = " ".repeat(firstDate.weekday * 3);
+    formattedDays += startDaySpaces;
   }
 
   for (let day = 1; day <= lastDate.day; day++) {
     const currentDate = DateTime.fromObject({ year, month, day });
-    let spacesBeforeAndAfterDay = day.toString().padStart(2, " ");
+    let daySpaces = day.toString().padStart(2, " ");
 
-    if (currentDate.weekday === 6) {
-      formattedDays += `${spacesBeforeAndAfterDay}\n`;
-    } else if (day !== lastDate.day) {
-      formattedDays += spacesBeforeAndAfterDay += " ";
+    if (day === lastDate.day) {
+      formattedDays += daySpaces;
+    } else if (currentDate.weekdayShort === "土") {
+      formattedDays += `${daySpaces}\n`;
     } else {
-      formattedDays += spacesBeforeAndAfterDay;
+      formattedDays += daySpaces += " ";
     }
   }
+
+  if (formattedDays.length <= 104) formattedDays += "\n";
 
   console.log(formattedDays);
 }
