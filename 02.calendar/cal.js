@@ -22,9 +22,7 @@ function calcYearAndMonth() {
 }
 
 function displayCalendar() {
-  const YearAndMonth = calcYearAndMonth();
-  const year = YearAndMonth.year;
-  const month = YearAndMonth.month;
+  const { year, month } = calcYearAndMonth();
   const firstDate = DateTime.fromObject({ year, month });
   const lastDate = firstDate.endOf("month");
   let formattedDays = "";
