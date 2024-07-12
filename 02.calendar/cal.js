@@ -23,17 +23,19 @@ function calcYearAndMonth() {
 
 function displayCalendar() {
   const { year, month } = calcYearAndMonth();
-  const firstDate = DateTime.fromObject({ year, month });
-  const lastDate = firstDate.endOf("month");
-  let formattedDays = "";
 
   console.log(`${month}月 ${year}`.padStart(13, " "));
   console.log("日", "月", "火", "水", "木", "金", "土");
+
+  const firstDate = DateTime.fromObject({ year, month });
+  let formattedDays = "";
 
   if (firstDate.weekdayShort !== "日") {
     const startDaySpaces = " ".repeat(firstDate.weekday * 3);
     formattedDays += startDaySpaces;
   }
+
+  const lastDate = firstDate.endOf("month");
 
   for (let day = 1; day <= lastDate.day; day++) {
     const currentDate = DateTime.fromObject({ year, month, day });
