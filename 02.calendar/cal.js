@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import minimist from "minimist";
-import { DateTime } from "luxon";
+import * as luxon from "luxon";
 
 function calcYearAndMonth() {
   const argv = minimist(process.argv.slice(2));
@@ -27,7 +27,7 @@ function displayCalendar() {
   console.log(`${month}月 ${year}`.padStart(13, " "));
   console.log("日", "月", "火", "水", "木", "金", "土");
 
-  const firstDate = DateTime.fromObject({ year, month });
+  const firstDate = luxon.DateTime.fromObject({ year, month });
   let formattedDays = "";
 
   if (firstDate.weekdayShort !== "日") {
@@ -38,7 +38,7 @@ function displayCalendar() {
   const lastDate = firstDate.endOf("month");
 
   for (let day = 1; day <= lastDate.day; day++) {
-    const currentDate = DateTime.fromObject({ year, month, day });
+    const currentDate = luxon.DateTime.fromObject({ year, month, day });
     let daySpaces = day.toString().padStart(2, " ");
 
     if (day === lastDate.day) {
