@@ -35,13 +35,17 @@ function displayCalendar() {
     formattedDays += startDaySpaces;
   }
 
+  let currentDate = luxon.DateTime.fromObject({ year, month });
   const lastDate = firstDate.endOf("month");
 
-  for (let day = 1; day <= lastDate.day; day++) {
-    const currentDate = luxon.DateTime.fromObject({ year, month, day });
-    let daySpaces = day.toString().padStart(2, " ");
+  for (
+    currentDate;
+    currentDate < lastDate;
+    currentDate = currentDate.plus({ days: 1 })
+  ) {
+    let daySpaces = currentDate.day.toString().padStart(2, " ");
 
-    if (day === lastDate.day) {
+    if (currentDate.day === lastDate.day) {
       formattedDays += daySpaces;
     } else if (currentDate.weekdayShort === "土") {
       formattedDays += `${daySpaces}\n`;
