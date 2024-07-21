@@ -43,15 +43,13 @@ function displayCalendar() {
     currentDate < lastDate;
     currentDate = currentDate.plus({ days: 1 })
   ) {
-    let daySpaces = currentDate.day.toString().padStart(2, " ");
+    let formattedDay = currentDate.day.toString().padStart(2, " ");
+    formattedDays += formattedDay;
 
-    if (currentDate.day === lastDate.day) {
-      formattedDays += daySpaces;
-    } else if (currentDate.weekdayShort === "土") {
-      formattedDays += `${daySpaces}\n`;
-    } else {
-      formattedDays += daySpaces += " ";
+    if (currentDate.day == lastDate.day) {
+      continue;
     }
+    formattedDays += currentDate.weekdayShort === "土" ? `\n` : ` `;
   }
 
   if (formattedDays.length <= 104) formattedDays += "\n";
