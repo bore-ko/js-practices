@@ -52,7 +52,11 @@ function displayCalendar() {
     formattedDays += currentDate.weekdayShort === "土" ? `\n` : ` `;
   }
 
-  if (formattedDays.length <= 104) formattedDays += "\n";
+  const MAX_DAYS_LENGTH = 104;
+
+  if (formattedDays.length <= MAX_DAYS_LENGTH) {
+    formattedDays += "\n";
+  }
 
   console.log(formattedDays);
 }
