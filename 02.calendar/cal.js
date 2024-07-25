@@ -2,6 +2,7 @@
 
 import minimist from "minimist";
 import * as luxon from "luxon";
+luxon.Settings.defaultLocale = "ja";
 
 function calcYearAndMonth() {
   const argv = minimist(process.argv.slice(2));
