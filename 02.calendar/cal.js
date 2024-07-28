@@ -45,12 +45,14 @@ function displayCalendar() {
     currentDate = currentDate.plus({ days: 1 })
   ) {
     let formattedDay = currentDate.day.toString().padStart(2, " ");
-    formattedDays += formattedDay;
 
-    if (currentDate.day == lastDate.day) {
-      continue;
+    if (currentDate.day !== lastDate.day && currentDate.weekdayShort === "土") {
+      formattedDay = `${formattedDay}\n`;
+    } else if (currentDate.day !== lastDate.day) {
+      formattedDay = `${formattedDay} `;
     }
-    formattedDays += currentDate.weekdayShort === "土" ? `\n` : ` `;
+
+    formattedDays += formattedDay;
   }
 
   const MAX_DAYS_LENGTH = 104;
