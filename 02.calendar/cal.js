@@ -2,7 +2,6 @@
 
 import minimist from "minimist";
 import * as luxon from "luxon";
-luxon.Settings.defaultLocale = "ja";
 
 function calcYearAndMonth() {
   const argv = minimist(process.argv.slice(2));
@@ -46,7 +45,7 @@ function displayCalendar() {
   ) {
     let formattedDay = currentDate.day.toString().padStart(2, " ");
 
-    if (currentDate.day !== lastDate.day && currentDate.weekdayShort === "土") {
+    if (currentDate.day !== lastDate.day && currentDate.weekday === 6) {
       formattedDay = `${formattedDay}\n`;
     } else if (currentDate.day !== lastDate.day) {
       formattedDay = `${formattedDay} `;
