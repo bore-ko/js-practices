@@ -28,7 +28,7 @@ function displayCalendar(calcYearAndMonth) {
   console.log("日 月 火 水 木 金 土");
 
   const firstDate = luxon.DateTime.fromObject({ year, month });
-  const lastDate = firstDate.endOf("month");
+  const lastDate = firstDate.endOf("month").startOf("day");
   let formattedDays = "";
 
   if (firstDate.weekdayShort !== "日") {
