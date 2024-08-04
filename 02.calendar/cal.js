@@ -38,17 +38,14 @@ function displayCalendar(calcYearAndMonth) {
 
   for (
     let currentDate = luxon.DateTime.fromObject({ year, month });
-    currentDate < lastDate;
+    currentDate <= lastDate;
     currentDate = currentDate.plus({ days: 1 })
   ) {
     let formattedDay = currentDate.day.toString().padStart(2, " ");
 
-    if (currentDate.day !== lastDate.day && currentDate.weekday === 6) {
-      formattedDay = `${formattedDay}\n`;
-    } else if (currentDate.day !== lastDate.day) {
-      formattedDay = `${formattedDay} `;
+    if (currentDate.day !== lastDate.day) {
+      formattedDay += currentDate.weekday === 6 ? `\n` : ` `;
     }
-
     formattedDays += formattedDay;
   }
 
