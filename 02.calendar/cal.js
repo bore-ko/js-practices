@@ -28,6 +28,7 @@ function displayCalendar(year_and_month) {
   console.log("日 月 火 水 木 金 土");
 
   const firstDate = luxon.DateTime.fromObject({ year, month });
+  const lastDate = firstDate.endOf("month");
   let formattedDays = "";
 
   if (firstDate.weekdayShort !== "日") {
@@ -35,11 +36,8 @@ function displayCalendar(year_and_month) {
     formattedDays += startDaySpaces;
   }
 
-  let currentDate = luxon.DateTime.fromObject({ year, month });
-  const lastDate = firstDate.endOf("month");
-
   for (
-    currentDate;
+    let currentDate = luxon.DateTime.fromObject({ year, month });
     currentDate < lastDate;
     currentDate = currentDate.plus({ days: 1 })
   ) {
