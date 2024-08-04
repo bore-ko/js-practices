@@ -31,7 +31,7 @@ function displayCalendar(calcYearAndMonth) {
   const lastDate = firstDate.endOf("month").startOf("day");
   let formattedDays = "";
 
-  if (firstDate.weekdayShort !== "日") {
+  if (firstDate.weekday !== 7) {
     const startDaySpaces = " ".repeat(firstDate.weekday * 3);
     formattedDays += startDaySpaces;
   }
