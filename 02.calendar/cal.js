@@ -49,9 +49,11 @@ function displayCalendar(calcYearAndMonth) {
     formattedDays += formattedDay;
   }
 
-  const MAX_DAYS_LENGTH = 104;
+  const weekCharlength = 20;
+  const newLineLength = 1;
+  const fiveWeeksLineLength = weekCharlength * 5 + newLineLength * 4;
 
-  if (formattedDays.length <= MAX_DAYS_LENGTH) {
+  if (formattedDays.length <= fiveWeeksLineLength) {
     formattedDays += "\n";
   }
 
