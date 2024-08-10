@@ -24,7 +24,9 @@ function calcYearAndMonth() {
 function displayCalendar(calcYearAndMonth) {
   const { year, month } = calcYearAndMonth;
 
-  console.log(`      ${month.toString().padStart(month.size, " ")}月 ${year}`);
+  console.log(
+    `      ${month.toString().padStart(month.length, " ")}月 ${year}`,
+  );
   console.log("日 月 火 水 木 金 土");
 
   const firstDate = luxon.DateTime.fromObject({ year, month });
