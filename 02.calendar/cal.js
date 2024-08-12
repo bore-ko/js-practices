@@ -25,7 +25,7 @@ function displayCalendar(calcYearAndMonth) {
   const { year, month } = calcYearAndMonth;
 
   console.log(
-    `      ${month.toString().padStart(month.length, " ")}月 ${year}`,
+    `      ${month.toString().padStart(month.toString().length, " ")}月 ${year}`,
   );
   console.log("日 月 火 水 木 金 土");
 
@@ -51,9 +51,9 @@ function displayCalendar(calcYearAndMonth) {
     formattedDays += formattedDay;
   }
 
-  const weekCharlength = 20;
+  const weekCharLength = 20;
   const newLineLength = 1;
-  const fiveWeeksLineLength = weekCharlength * 5 + newLineLength * 4;
+  const fiveWeeksLineLength = weekCharLength * 5 + newLineLength * 4;
 
   if (formattedDays.length <= fiveWeeksLineLength) {
     formattedDays += "\n";
