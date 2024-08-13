@@ -41,7 +41,7 @@ function displayCalendar(calcYearAndMonth) {
     currentDate <= lastDate;
     currentDate = currentDate.plus({ days: 1 })
   ) {
-    let formattedDay = currentDate.day.toString().padStart(2, " ");
+    let formattedDay = currentDate.day.toString().padStart(2);
 
     if (currentDate.day !== lastDate.day) {
       formattedDay += currentDate.weekday === 6 ? `\n` : ` `;
