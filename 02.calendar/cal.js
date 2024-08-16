@@ -21,9 +21,7 @@ function calcYearAndMonth() {
   return { year, month };
 }
 
-function displayCalendar(calcYearAndMonth) {
-  const { year, month } = calcYearAndMonth;
-
+function displayCalendar(year, month) {
   console.log(`      ${month}月 ${year}`);
   console.log("日 月 火 水 木 金 土");
 
@@ -60,4 +58,5 @@ function displayCalendar(calcYearAndMonth) {
   console.log(formattedDays);
 }
 
-displayCalendar(calcYearAndMonth());
+const { year, month } = calcYearAndMonth();
+displayCalendar(year, month);
