@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import sqlite3 from "sqlite3";
 import timers from "timers/promises";
+import sqlite3 from "sqlite3";
 
 const run = (tableName) =>
   new Promise((resolve) => {
@@ -58,7 +58,7 @@ const tableNotes = "notes";
 const tableMemos = "memos";
 
 // Promise エラーなし
-var db = new sqlite3.Database(":memory:");
+let db = new sqlite3.Database(":memory:");
 
 run(tableBooks)
   .then(() => {
