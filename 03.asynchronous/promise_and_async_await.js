@@ -88,13 +88,13 @@ run(tableBooks)
     return insert(tableNotes, titleName);
   })
   .catch((err) => {
-    console.log(err.message);
+    console.error(err.message);
   })
   .then(() => {
     return all(tableMemos);
   })
   .catch((err) => {
-    console.log(`${err.message}\n`);
+    console.error(`${err.message}\n`);
   })
   .finally(() => {
     db.close();
@@ -127,12 +127,12 @@ async function err(tableBooks) {
     await run(tableBooks);
     await insert(tableNotes, titleName);
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
   }
   try {
     await all(tableMemos);
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
   }
   db.close();
 }

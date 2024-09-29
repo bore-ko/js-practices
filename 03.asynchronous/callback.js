@@ -17,13 +17,13 @@ db.run(
           rows.forEach((row) =>
             console.log(`id: ${row.id}, title: ${row.title}`),
           );
+
+          db.close();
         });
       });
     });
   },
 );
-
-db.close();
 
 await timers.setTimeout(100);
 
@@ -35,16 +35,16 @@ db.run(
   () => {
     db.run("INSERT INTO notes (title) VALUES (?)", "JS学習", (err) => {
       if (err) {
-        console.log(err.message);
+        console.error(err.message);
       }
 
       db.all("SELECT * FROM memos", (err) => {
         if (err) {
-          console.log(err.message);
+          console.error(err.message);
         }
+
+        db.close();
       });
     });
   },
 );
-
-db.close();
