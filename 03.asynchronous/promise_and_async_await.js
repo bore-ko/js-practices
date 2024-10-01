@@ -3,36 +3,9 @@
 import timers from "timers/promises";
 import sqlite3 from "sqlite3";
 
-const run = (tableName) =>
-  new Promise((resolve) => {
-    db.run(
-      "CREATE TABLE " +
-        tableName +
-        "(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
-      () => {
-        resolve();
-      },
-    );
-  });
-
-const insert = (tableName, titleName) =>
+const run = (sql) =>
   new Promise((resolve, reject) => {
-    db.run(
-      "INSERT INTO " + tableName + "(title) VALUES(?)",
-      titleName,
-      (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(row);
-        }
-      },
-    );
-  });
-
-const get = (tableName) =>
-  new Promise((resolve, reject) => {
-    db.get("SELECT id FROM " + tableName, (err, row) => {
+    db.run(sql, (err, row) => {
       if (err) {
         reject(err);
       } else {
@@ -41,9 +14,20 @@ const get = (tableName) =>
     });
   });
 
-const all = (tableName) =>
+const get = (sql) =>
   new Promise((resolve, reject) => {
-    db.all("SELECT * FROM " + tableName, (err, rows) => {
+    db.get(sql, (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(row);
+      }
+    });
+  });
+
+const all = (sql) =>
+  new Promise((resolve, reject) => {
+    db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
       } else {
@@ -52,25 +36,22 @@ const all = (tableName) =>
     });
   });
 
-const tableBooks = "books";
-const titleName = "JS学習";
-const tableNotes = "notes";
-const tableMemos = "memos";
-
 // Promise エラーなし
 let db = new sqlite3.Database(":memory:");
 
-run(tableBooks)
+run(
+  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+)
   .then(() => {
-    return insert(tableBooks, titleName);
+    return run("INSERT INTO books (title) VALUES ('JS学習')");
   })
   .then(() => {
-    return get(tableBooks).then((row) => {
+    return get("SELECT id FROM books").then((row) => {
       console.log(`id: ${row.id}`);
     });
   })
   .then(() =>
-    all(tableBooks).then((rows) => {
+    all("SELECT * FROM books").then((rows) => {
       rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
     }),
   )
@@ -80,18 +61,20 @@ run(tableBooks)
 
 await timers.setTimeout(100);
 
-// Promise エラーあり
+// // Promise エラーあり
 db = new sqlite3.Database(":memory:");
 
-run(tableBooks)
+run(
+  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+)
   .then(() => {
-    return insert(tableNotes, titleName);
+    return run("INSERT INTO notes (title) VALUES ('JS学習')");
   })
   .catch((err) => {
     console.error(err.message);
   })
   .then(() => {
-    return all(tableMemos);
+    return all("SELECT * FROM memos");
   })
   .catch((err) => {
     console.error(`${err.message}\n`);
@@ -105,36 +88,40 @@ await timers.setTimeout(100);
 // async / await エラーなし
 db = new sqlite3.Database(":memory:");
 
-async function nonErr(tableBooks) {
-  await run(tableBooks);
-  await insert(tableBooks, titleName);
-  const row = await get(tableBooks);
+async function nonErr() {
+  await run(
+    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+  );
+  await run("INSERT INTO books (title) VALUES ('JS学習')");
+  const row = await get("SELECT id FROM books");
   console.log(`id: ${row.id}`);
-  const rows = await all(tableBooks);
+  const rows = await all("SELECT * FROM books");
   rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
   db.close();
 }
 
-nonErr(tableBooks);
+nonErr();
 
 await timers.setTimeout(100);
 
-// async / await エラーあり
+// // async / await エラーあり
 db = new sqlite3.Database(":memory:");
 
-async function err(tableBooks) {
+async function err() {
   try {
-    await run(tableBooks);
-    await insert(tableNotes, titleName);
+    await run(
+      "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    );
+    await run("INSERT INTO notes (title) VALUES ('JS学習')");
   } catch (err) {
     console.error(err.message);
   }
   try {
-    await all(tableMemos);
+    await all("SELECT * FROM memos");
   } catch (err) {
     console.error(err.message);
   }
   db.close();
 }
 
-err(tableBooks);
+err();
