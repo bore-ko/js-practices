@@ -56,21 +56,13 @@ const nonErr = () => {
   run(
     "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   )
-    .then(() => {
-      return run("INSERT INTO books (title) VALUES ('Promise 学習')");
+    .then(() => run("INSERT INTO books (title) VALUES ('Promise 学習')"))
+    .then(() => get("SELECT id FROM books"))
+    .then((row) => console.log(`id: ${row.id}`))
+    .then(() => all("SELECT * FROM books"))
+    .then((rows) => {
+      rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
     })
-    .then(() => {
-      return get("SELECT id FROM books").then((row) => {
-        console.log(`id: ${row.id}`);
-      });
-    })
-    .then(() =>
-      all("SELECT * FROM books").then((rows) => {
-        rows.forEach((row) =>
-          console.log(`id: ${row.id}, title: ${row.title}`),
-        );
-      }),
-    )
     .finally(() => {
       dbClose().catch((err) => {
         console.log(err);
@@ -84,18 +76,10 @@ const err = () => {
   run(
     "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   )
-    .then(() => {
-      return run("INSERT INTO notes (title) VALUES ('Promise 学習')");
-    })
-    .catch((err) => {
-      console.error(err.message);
-    })
-    .then(() => {
-      return all("SELECT * FROM memos");
-    })
-    .catch((err) => {
-      console.error(`${err.message}\n`);
-    })
+    .then(() => run("INSERT INTO notes (title) VALUES ('Promise 学習')"))
+    .catch((err) => console.error(err.message))
+    .then(() => all("SELECT * FROM memos"))
+    .catch((err) => console.error(`${err.message}\n`))
     .finally(() => {
       dbClose().catch((err) => {
         console.log(err);
