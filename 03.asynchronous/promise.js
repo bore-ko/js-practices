@@ -41,7 +41,7 @@ export const all = (sql) =>
     });
   });
 
-export const dbClose = () =>
+export const closeDb = () =>
   new Promise((reject) => {
     db.close((err) => {
       if (err) {
@@ -64,7 +64,7 @@ const nonErr = () => {
       rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
     })
     .finally(() => {
-      dbClose().catch((err) => {
+      closeDb().catch((err) => {
         console.log(err);
       });
     });
@@ -81,7 +81,7 @@ const err = () => {
     .then(() => all("SELECT * FROM memos"))
     .catch((err) => console.error(`${err.message}\n`))
     .finally(() => {
-      dbClose().catch((err) => {
+      closeDb().catch((err) => {
         console.log(err);
       });
     });
