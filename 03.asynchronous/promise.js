@@ -51,7 +51,7 @@ export const closeDb = () =>
   });
 
 // Promise エラーなし
-const nonErr = () => {
+const handlNonErr = () => {
   initDb();
   run(
     "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
@@ -64,15 +64,11 @@ const nonErr = () => {
     .then((rows) => {
       rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
     })
-    .finally(() => {
-      closeDb().catch((err) => {
-        console.log(err);
-      });
-    });
+    .finally(() => closeDb());
 };
 
 // Promise エラーあり
-const err = () => {
+const handlErr = () => {
   initDb();
   run(
     "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
@@ -81,20 +77,16 @@ const err = () => {
     .then(() => run("INSERT INTO [notes] (title) VALUES (?)", ["Promise 学習"]))
     .catch((err) => console.error(err.message))
     .then(() => all("SELECT * FROM [memos]"))
-    .catch((err) => console.error(`${err.message}\n`))
-    .finally(() => {
-      closeDb().catch((err) => {
-        console.log(err);
-      });
-    });
+    .catch((err) => console.error(err.message))
+    .finally(() => closeDb());
 };
 
 if (process.argv[1].endsWith("promise.js")) {
-  nonErr();
+  handlNonErr();
 }
 
 await timers.setTimeout(100);
 
 if (process.argv[1].endsWith("promise.js")) {
-  err();
+  handlErr();
 }
