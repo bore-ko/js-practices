@@ -8,9 +8,9 @@ export const initDb = () => {
   db = new sqlite3.Database(":memory:");
 };
 
-export const run = (sql) =>
+export const run = (sql, param = null) =>
   new Promise((resolve, reject) => {
-    db.run(sql, (err, row) => {
+    db.run(sql, param, (err, row) => {
       if (err) {
         reject(err);
       } else {
@@ -54,12 +54,13 @@ export const closeDb = () =>
 const nonErr = () => {
   initDb();
   run(
-    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    [],
   )
-    .then(() => run("INSERT INTO books (title) VALUES ('Promise 学習')"))
-    .then(() => get("SELECT id FROM books"))
+    .then(() => run("INSERT INTO [books] (title) VALUES (?)", ["Promise 学習"]))
+    .then(() => get("SELECT id FROM [books]"))
     .then((row) => console.log(`id: ${row.id}`))
-    .then(() => all("SELECT * FROM books"))
+    .then(() => all("SELECT * FROM [books]"))
     .then((rows) => {
       rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
     })
@@ -74,11 +75,12 @@ const nonErr = () => {
 const err = () => {
   initDb();
   run(
-    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    [],
   )
-    .then(() => run("INSERT INTO notes (title) VALUES ('Promise 学習')"))
+    .then(() => run("INSERT INTO [notes] (title) VALUES (?)", ["Promise 学習"]))
     .catch((err) => console.error(err.message))
-    .then(() => all("SELECT * FROM memos"))
+    .then(() => all("SELECT * FROM [memos]"))
     .catch((err) => console.error(`${err.message}\n`))
     .finally(() => {
       closeDb().catch((err) => {

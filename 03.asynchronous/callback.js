@@ -7,13 +7,13 @@ import sqlite3 from "sqlite3";
 let db = new sqlite3.Database(":memory:");
 
 db.run(
-  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+  "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
     db.run("INSERT INTO books (title) VALUES (?)", "callback 学習", () => {
-      db.get("SELECT id FROM books", (_, row) => {
+      db.get("SELECT id FROM [books]", (_, row) => {
         console.log(`id: ${row.id}`);
 
-        db.all("SELECT * FROM books", (_, rows) => {
+        db.all("SELECT * FROM [books]", (_, rows) => {
           rows.forEach((row) =>
             console.log(`id: ${row.id}, title: ${row.title}`),
           );
@@ -31,14 +31,14 @@ await timers.setTimeout(100);
 db = new sqlite3.Database(":memory:");
 
 db.run(
-  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+  "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
-    db.run("INSERT INTO notes (title) VALUES (?)", "callback 学習", (err) => {
+    db.run("INSERT INTO [notes] (title) VALUES (?)", "callback 学習", (err) => {
       if (err) {
         console.error(err.message);
       }
 
-      db.all("SELECT * FROM memos", (err) => {
+      db.all("SELECT * FROM [memos]", (err) => {
         if (err) {
           console.error(err.message);
         }
