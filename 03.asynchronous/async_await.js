@@ -7,14 +7,15 @@ import { initDb, run, get, all, closeDb } from "./promise.js";
 try {
   initDb();
   await run(
-    "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
     [],
   );
-  await run("INSERT INTO [books] (title) VALUES (?)", ["async/await 学習"]);
-  const row = await get("SELECT id FROM [books]");
+  await run("INSERT INTO books (title) VALUES (?)", ["async/await 学習"]);
+  const row = await get("SELECT id FROM books");
   console.log(`id: ${row.id}`);
-  const rows = await all("SELECT * FROM [books]");
+  const rows = await all("SELECT * FROM books");
   rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
+  await run("DROP TABLE books", []);
 } finally {
   closeDb();
 }
@@ -24,7 +25,7 @@ await timers.setTimeout(100);
 // async / await エラーあり
 initDb();
 await run(
-  "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   [],
 );
 try {
@@ -35,11 +36,12 @@ try {
   }
 }
 try {
-  await all("SELECT * FROM [memos]");
+  await all("SELECT * FROM memos");
 } catch (err) {
   if (err.code == "SQLITE_ERROR") {
     console.error(err.message);
   }
+  await run("DROP TABLE books", []);
 } finally {
   closeDb();
 }

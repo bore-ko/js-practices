@@ -54,16 +54,17 @@ export const closeDb = () =>
 const handlNonErr = () => {
   initDb();
   run(
-    "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
     [],
   )
-    .then(() => run("INSERT INTO [books] (title) VALUES (?)", ["Promise 学習"]))
-    .then(() => get("SELECT id FROM [books]"))
+    .then(() => run("INSERT INTO books (title) VALUES (?)", ["Promise 学習"]))
+    .then(() => get("SELECT id FROM books"))
     .then((row) => console.log(`id: ${row.id}`))
-    .then(() => all("SELECT * FROM [books]"))
+    .then(() => all("SELECT * FROM books"))
     .then((rows) => {
       rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
     })
+    .then(() => run("DROP TABLE books"), [])
     .finally(() => closeDb());
 };
 
@@ -71,13 +72,14 @@ const handlNonErr = () => {
 const handlErr = () => {
   initDb();
   run(
-    "CREATE TABLE [books] (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
     [],
   )
-    .then(() => run("INSERT INTO [notes] (title) VALUES (?)", ["Promise 学習"]))
+    .then(() => run("INSERT INTO notes (title) VALUES (?)", ["Promise 学習"]))
     .catch((err) => console.error(err.message))
-    .then(() => all("SELECT * FROM [memos]"))
+    .then(() => all("SELECT * FROM memos"))
     .catch((err) => console.error(err.message))
+    .then(() => run("DROP TABLE books"), [])
     .finally(() => closeDb());
 };
 
