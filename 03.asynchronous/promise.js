@@ -3,11 +3,6 @@
 import timers from "timers/promises";
 import sqlite3 from "sqlite3";
 
-let db;
-export const initDb = () => {
-  db = new sqlite3.Database(":memory:");
-};
-
 export const run = (sql, param = null) =>
   new Promise((resolve, reject) => {
     db.run(sql, param, (err, row) => {
@@ -50,9 +45,10 @@ export const closeDb = () =>
     });
   });
 
+let db = new sqlite3.Database(":memory:");
+
 // Promise エラーなし
 const handlNonErr = () => {
-  initDb();
   run(
     "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
     [],
@@ -64,13 +60,14 @@ const handlNonErr = () => {
     .then((rows) => {
       rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
     })
-    .then(() => run("DROP TABLE books"), [])
+    .then(() => run("DROP TABLE books", []))
     .finally(() => closeDb());
 };
 
 // Promise エラーあり
 const handlErr = () => {
-  initDb();
+  db = new sqlite3.Database(":memory:");
+
   run(
     "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
     [],
@@ -79,7 +76,7 @@ const handlErr = () => {
     .catch((err) => console.error(err.message))
     .then(() => all("SELECT * FROM memos"))
     .catch((err) => console.error(err.message))
-    .then(() => run("DROP TABLE books"), [])
+    .then(() => run("DROP TABLE books", []))
     .finally(() => closeDb());
 };
 

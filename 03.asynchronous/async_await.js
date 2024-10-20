@@ -1,29 +1,23 @@
 #!/usr/bin/env node
 
 import timers from "timers/promises";
-import { initDb, run, get, all, closeDb } from "./promise.js";
+import { run, get, all, closeDb } from "./promise.js";
 
 // async / await エラーなし
-try {
-  initDb();
-  await run(
-    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
-    [],
-  );
-  await run("INSERT INTO books (title) VALUES (?)", ["async/await 学習"]);
-  const row = await get("SELECT id FROM books");
-  console.log(`id: ${row.id}`);
-  const rows = await all("SELECT * FROM books");
-  rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
-  await run("DROP TABLE books", []);
-} finally {
-  closeDb();
-}
+await run(
+  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+  [],
+);
+await run("INSERT INTO books (title) VALUES (?)", ["async/await 学習"]);
+const row = await get("SELECT id FROM books");
+console.log(`id: ${row.id}`);
+const rows = await all("SELECT * FROM books");
+rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
+await run("DROP TABLE books", []);
 
 await timers.setTimeout(100);
 
 // async / await エラーあり
-initDb();
 await run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   [],
