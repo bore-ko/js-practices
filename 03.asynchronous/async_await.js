@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import timers from "timers/promises";
-import { run, get, all, closeDb } from "./promise.js";
+import { run, get, all, close } from "./promise.js";
 
 // async / await エラーなし
 await run(
@@ -37,5 +37,5 @@ try {
   }
   await run("DROP TABLE books", []);
 } finally {
-  closeDb();
+  close();
 }

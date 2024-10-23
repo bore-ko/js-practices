@@ -9,9 +9,11 @@ let db = new sqlite3.Database(":memory:");
 db.run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
-    db.run("INSERT INTO books (title) VALUES (?)", "callback 学習", () => {
-      db.get("SELECT id FROM books", (_, row) => {
-        console.log(`id: ${row.id}`);
+    db.run(
+      "INSERT INTO books (title) VALUES (?)",
+      "callback 学習",
+      function () {
+        console.log(`id: ${this.lastID}`);
 
         db.all("SELECT * FROM books", (_, rows) => {
           rows.forEach((row) =>
@@ -22,8 +24,8 @@ db.run(
             db.close();
           });
         });
-      });
-    });
+      },
+    );
   },
 );
 

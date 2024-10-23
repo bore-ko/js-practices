@@ -36,7 +36,7 @@ export const all = (sql) =>
     });
   });
 
-export const closeDb = () =>
+export const close = () =>
   new Promise((reject) => {
     db.close((err) => {
       if (err) {
@@ -61,7 +61,7 @@ const handlNonErr = () => {
       rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
     })
     .then(() => run("DROP TABLE books", []))
-    .finally(() => closeDb());
+    .finally(() => close());
 };
 
 // Promise エラーあり
@@ -77,7 +77,7 @@ const handlErr = () => {
     .then(() => all("SELECT * FROM memos"))
     .catch((err) => console.error(err.message))
     .then(() => run("DROP TABLE books", []))
-    .finally(() => closeDb());
+    .finally(() => close());
 };
 
 if (process.argv[1].endsWith("promise.js")) {
