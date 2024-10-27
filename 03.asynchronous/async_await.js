@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import timers from "timers/promises";
-import { run, get, all, close } from "./promise.js";
+import { run, all, close } from "./promise.js";
 
 // async / await エラーなし
 await run(

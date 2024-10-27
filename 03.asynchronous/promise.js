@@ -3,24 +3,13 @@
 import timers from "timers/promises";
 import sqlite3 from "sqlite3";
 
-export const run = (sql, param = null) =>
+export const run = (sql, param) =>
   new Promise((resolve, reject) => {
     db.run(sql, param, function (err, row) {
       if (err) {
         reject(err);
       } else {
         resolve({ row, lastID: this.lastID });
-      }
-    });
-  });
-
-export const get = (sql) =>
-  new Promise((resolve, reject) => {
-    db.get(sql, (err, row) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(row);
       }
     });
   });
@@ -37,10 +26,12 @@ export const all = (sql) =>
   });
 
 export const close = () =>
-  new Promise((reject) => {
-    db.close((err) => {
+  new Promise((resolve, reject) => {
+    db.close((err, row) => {
       if (err) {
         reject(err);
+      } else {
+        resolve(row);
       }
     });
   });
