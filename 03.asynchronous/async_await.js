@@ -8,9 +8,10 @@ await run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   [],
 );
-await run("INSERT INTO books (title) VALUES (?)", ["async/await 学習"]);
-const row = await get("SELECT id FROM books");
-console.log(`id: ${row.id}`);
+const row = await run("INSERT INTO books (title) VALUES (?)", [
+  "async/await 学習",
+]);
+console.log(`id: ${row.lastID}`);
 const rows = await all("SELECT * FROM books");
 rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
 await run("DROP TABLE books", []);

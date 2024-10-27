@@ -5,11 +5,11 @@ import sqlite3 from "sqlite3";
 
 export const run = (sql, param = null) =>
   new Promise((resolve, reject) => {
-    db.run(sql, param, (err, row) => {
+    db.run(sql, param, function (err, row) {
       if (err) {
         reject(err);
       } else {
-        resolve(row);
+        resolve({ row, lastID: this.lastID });
       }
     });
   });
@@ -54,8 +54,9 @@ const handlNonErr = () => {
     [],
   )
     .then(() => run("INSERT INTO books (title) VALUES (?)", ["Promise 学習"]))
-    .then(() => get("SELECT id FROM books"))
-    .then((row) => console.log(`id: ${row.id}`))
+    .then((row) => {
+      console.log(`id: ${row.lastID}`);
+    })
     .then(() => all("SELECT * FROM books"))
     .then((rows) => {
       rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
