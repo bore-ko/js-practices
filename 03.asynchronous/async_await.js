@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
-import timers from "timers/promises";
 import { run, all, close } from "./promise.js";
 
-// async / await エラーなし
+// async/await エラーなし
 await run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   [],
@@ -18,9 +17,7 @@ rows.forEach((row) => {
 });
 await run("DROP TABLE books", []);
 
-await timers.setTimeout(100);
-
-// async / await エラーあり
+// async/await エラーあり
 await run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   [],
