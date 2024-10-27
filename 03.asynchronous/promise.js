@@ -65,9 +65,13 @@ const handlErr = () => {
     [],
   )
     .then(() => run("INSERT INTO notes (title) VALUES (?)", ["Promise 学習"]))
-    .catch((err) => console.error(err.message))
+    .catch((err) => {
+      console.error(err.message);
+    })
     .then(() => all("SELECT * FROM memos"))
-    .catch((err) => console.error(err.message))
+    .catch((err) => {
+      console.error(err.message);
+    })
     .then(() => run("DROP TABLE books", []))
     .finally(() => close());
 };

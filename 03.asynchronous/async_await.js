@@ -13,7 +13,9 @@ const row = await run("INSERT INTO books (title) VALUES (?)", [
 ]);
 console.log(`id: ${row.lastID}`);
 const rows = await all("SELECT * FROM books");
-rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
+rows.forEach((row) => {
+  console.log(`id: ${row.id}, title: ${row.title}`);
+});
 await run("DROP TABLE books", []);
 
 await timers.setTimeout(100);
