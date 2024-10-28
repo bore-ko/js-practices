@@ -42,9 +42,8 @@ let db = new sqlite3.Database(":memory:");
 const handlNonErr = () => {
   run(
     "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
-    [],
   )
-    .then(() => run("INSERT INTO books (title) VALUES (?)", ["Promise 学習"]))
+    .then(() => run("INSERT INTO books (title) VALUES (?)", "Promise 学習"))
     .then((row) => {
       console.log(`id: ${row.lastID}`);
     })
@@ -52,7 +51,7 @@ const handlNonErr = () => {
     .then((rows) => {
       rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
     })
-    .then(() => run("DROP TABLE books", []))
+    .then(() => run("DROP TABLE books"))
     .finally(() => close());
 };
 
@@ -62,9 +61,8 @@ const handlErr = () => {
 
   run(
     "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
-    [],
   )
-    .then(() => run("INSERT INTO notes (title) VALUES (?)", ["Promise 学習"]))
+    .then(() => run("INSERT INTO notes (title) VALUES (?)", "Promise 学習"))
     .catch((err) => {
       console.error(err.message);
     })
@@ -72,7 +70,7 @@ const handlErr = () => {
     .catch((err) => {
       console.error(err.message);
     })
-    .then(() => run("DROP TABLE books", []))
+    .then(() => run("DROP TABLE books"))
     .finally(() => close());
 };
 
