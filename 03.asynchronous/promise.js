@@ -10,12 +10,12 @@ run(
   .then(() => run("INSERT INTO books (title) VALUES (?)", "Promise 学習"))
   .then((row) => {
     console.log(`id: ${row.lastID}`);
+    return all("SELECT * FROM books");
   })
-  .then(() => all("SELECT * FROM books"))
   .then((rows) => {
     rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
-  })
-  .then(() => run("DROP TABLE books"));
+    return run("DROP TABLE books");
+  });
 
 await timers.setTimeout(100);
 
@@ -26,10 +26,10 @@ run(
   .then(() => run("INSERT INTO notes (title) VALUES (?)", "Promise 学習"))
   .catch((err) => {
     console.error(err.message);
+    return all("SELECT * FROM memos");
   })
-  .then(() => all("SELECT * FROM memos"))
   .catch((err) => {
     console.error(err.message);
+    return run("DROP TABLE books");
   })
-  .then(() => run("DROP TABLE books"))
   .finally(() => close());
