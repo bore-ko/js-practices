@@ -6,11 +6,11 @@ let db = new sqlite3.Database(":memory:");
 
 export const run = (sql, param) =>
   new Promise((resolve, reject) => {
-    db.run(sql, param, function (err, row) {
+    db.run(sql, param, function (err) {
       if (err) {
         reject(err);
       } else {
-        resolve({ row, lastID: this.lastID });
+        resolve({ lastID: this.lastID });
       }
     });
   });

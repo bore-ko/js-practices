@@ -24,13 +24,16 @@ await run(
 try {
   await run("INSERT INTO notes (title) VALUES (?)", "async/await 学習");
 } catch (err) {
-  console.error(err.message);
+  if (err instanceof Error && err.code == "SQLITE_ERROR") {
+    console.error(err.message);
+  }
 }
 try {
   await all("SELECT * FROM memos");
 } catch (err) {
-  console.error(err.message);
-
+  if (err instanceof Error && err.code == "SQLITE_ERROR") {
+    console.error(err.message);
+  }
   await run("DROP TABLE books");
 } finally {
   close();

@@ -27,11 +27,15 @@ run(
 )
   .then(() => run("INSERT INTO notes (title) VALUES (?)", "Promise 学習"))
   .catch((err) => {
-    console.error(err.message);
+    if (err instanceof Error && err.code == "SQLITE_ERROR") {
+      console.error(err.message);
+    }
     return all("SELECT * FROM memos");
   })
   .catch((err) => {
-    console.error(err.message);
+    if (err instanceof Error && err.code == "SQLITE_ERROR") {
+      console.error(err.message);
+    }
     return run("DROP TABLE books");
   })
   .finally(() => close());
