@@ -28,11 +28,11 @@ export const all = (sql) =>
 
 export const close = () =>
   new Promise((resolve, reject) => {
-    db.close((err, row) => {
+    db.close((err) => {
       if (err) {
         reject(err);
       } else {
-        resolve(row);
+        resolve();
       }
     });
   });

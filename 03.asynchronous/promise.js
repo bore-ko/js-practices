@@ -13,8 +13,10 @@ run(
     return all("SELECT * FROM books");
   })
   .then((rows) => {
-    rows.forEach((row) => console.log(`id: ${row.id}, title: ${row.title}`));
-    return run("DROP TABLE books");
+    rows.forEach((row) => {
+      console.log(`id: ${row.id}, title: ${row.title}`);
+      return run("DROP TABLE books");
+    });
   });
 
 await timers.setTimeout(100);
