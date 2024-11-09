@@ -26,6 +26,8 @@ try {
 } catch (err) {
   if (err instanceof Error && err.code == "SQLITE_ERROR") {
     console.error(err.message);
+  } else {
+    console.error(err);
   }
 }
 try {
@@ -33,6 +35,8 @@ try {
 } catch (err) {
   if (err instanceof Error && err.code == "SQLITE_ERROR") {
     console.error(err.message);
+  } else {
+    console.error(err);
   }
   await run("DROP TABLE books");
 } finally {

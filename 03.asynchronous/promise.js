@@ -29,12 +29,16 @@ run(
   .catch((err) => {
     if (err instanceof Error && err.code == "SQLITE_ERROR") {
       console.error(err.message);
+    } else {
+      console.error(err);
     }
     return all("SELECT * FROM memos");
   })
   .catch((err) => {
     if (err instanceof Error && err.code == "SQLITE_ERROR") {
       console.error(err.message);
+    } else {
+      console.error(err);
     }
     return run("DROP TABLE books");
   })
