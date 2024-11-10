@@ -10,7 +10,7 @@ export const run = (sql, param) =>
       if (err) {
         reject(err);
       } else {
-        resolve({ lastID: this.lastID });
+        resolve(this);
       }
     });
   });
