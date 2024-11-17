@@ -19,8 +19,8 @@ run(
   .then((rows) => {
     rows.forEach((row) => {
       console.log(`id: ${row.id}, title: ${row.title}`);
-      return run(db, "DROP TABLE books");
     });
+    return run(db, "DROP TABLE books");
   })
   .finally(() => {
     close(db);
