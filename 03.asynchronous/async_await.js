@@ -26,26 +26,28 @@ await close(db);
 // async/await エラーあり
 db = new sqlite3.Database(":memory:");
 
-await run(
-  db,
-  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
-);
 try {
-  await run(db, "INSERT INTO notes (title) VALUES (?)", "async/await 学習");
-} catch (err) {
-  if (err instanceof Error && err.code == "SQLITE_ERROR") {
-    console.error(err.message);
-  } else {
-    console.error(err);
+  await run(
+    db,
+    "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
+  );
+  try {
+    await run(db, "INSERT INTO notes (title) VALUES (?)", "async/await 学習");
+  } catch (err) {
+    if (err instanceof Error && err.code == "SQLITE_ERROR") {
+      console.error(err.message);
+    } else {
+      console.error(err);
+    }
   }
-}
-try {
-  await all(db, "SELECT * FROM memos");
-} catch (err) {
-  if (err instanceof Error && err.code == "SQLITE_ERROR") {
-    console.error(err.message);
-  } else {
-    console.error(err);
+  try {
+    await all(db, "SELECT * FROM memos");
+  } catch (err) {
+    if (err instanceof Error && err.code == "SQLITE_ERROR") {
+      console.error(err.message);
+    } else {
+      console.error(err);
+    }
   }
   await run(db, "DROP TABLE books");
 } finally {
