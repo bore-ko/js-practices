@@ -40,7 +40,7 @@ run(
     if (err instanceof Error && err.code == "SQLITE_ERROR") {
       console.error(err.message);
     } else {
-      console.error(err);
+      throw err;
     }
     return all(db, "SELECT * FROM memos");
   })
@@ -48,7 +48,7 @@ run(
     if (err instanceof Error && err.code == "SQLITE_ERROR") {
       console.error(err.message);
     } else {
-      console.error(err);
+      throw err;
     }
     return run(db, "DROP TABLE books");
   })

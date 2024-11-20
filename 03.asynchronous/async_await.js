@@ -37,7 +37,7 @@ try {
     if (err instanceof Error && err.code == "SQLITE_ERROR") {
       console.error(err.message);
     } else {
-      console.error(err);
+      throw err;
     }
   }
   try {
@@ -46,7 +46,7 @@ try {
     if (err instanceof Error && err.code == "SQLITE_ERROR") {
       console.error(err.message);
     } else {
-      console.error(err);
+      throw err;
     }
   }
   await run(db, "DROP TABLE books");
