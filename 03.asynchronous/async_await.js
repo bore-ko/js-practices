@@ -51,5 +51,5 @@ try {
   }
   await run(db, "DROP TABLE books");
 } finally {
-  close(db);
+  await close(db);
 }

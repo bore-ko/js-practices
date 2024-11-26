@@ -22,9 +22,7 @@ run(
     });
     return run(db, "DROP TABLE books");
   })
-  .finally(() => {
-    return close(db);
-  });
+  .finally(() => close(db));
 
 await timers.setTimeout(100);
 
@@ -52,6 +50,4 @@ run(
     }
     return run(db, "DROP TABLE books");
   })
-  .finally(() => {
-    return close(db);
-  });
+  .finally(() => close(db));
