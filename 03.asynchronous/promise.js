@@ -35,7 +35,7 @@ run(
 )
   .then(() => run(db, "INSERT INTO notes (title) VALUES (?)", "Promise 学習"))
   .catch((err) => {
-    if (err instanceof Error && err.code == "SQLITE_ERROR") {
+    if (err instanceof Error && err.code === "SQLITE_ERROR") {
       console.error(err.message);
     } else {
       throw err;
@@ -43,7 +43,7 @@ run(
     return all(db, "SELECT * FROM memos");
   })
   .catch((err) => {
-    if (err instanceof Error && err.code == "SQLITE_ERROR") {
+    if (err instanceof Error && err.code === "SQLITE_ERROR") {
       console.error(err.message);
     } else {
       throw err;
