@@ -18,24 +18,25 @@ if (argv === "-l") {
 async function accessFile(file) {
   try {
     await fs.access(file);
+    return true;
   } catch {
-    false;
+    return false;
   }
 }
 
 async function readFile(file) {
   try {
-    const data = await fs.readFile(file, { encoding: "utf8" });
-    await JSON.parse(data);
+    const data = await fs.readFile(file, "utf8");
+    return JSON.parse(data);
   } catch (err) {
     console.error(err);
     throw err;
   }
 }
 
-async function appendFile(file, data) {
+async function writeFile(file, data) {
   try {
-    await fs.appendFile(file, data, "utf8");
+    await fs.writeFile(file, data, "utf8");
   } catch (err) {
     console.error(err);
     throw err;
@@ -60,6 +61,6 @@ async function addMemo() {
     memos.push({ body: lines });
 
     let jsonMemos = JSON.stringify(memos, null, "\t");
-    appendFile(file, jsonMemos);
+    writeFile(file, jsonMemos);
   });
 }
