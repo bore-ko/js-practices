@@ -6,6 +6,7 @@ const argv = process.argv[2];
 
 if (argv === "-l") {
   // 一覧
+  listMemo();
 } else if (argv === "-r") {
   // 参照
 } else if (argv === "-d") {
@@ -63,4 +64,19 @@ async function addMemo() {
     let jsonMemos = JSON.stringify(memos, null, "\t");
     writeFile(file, jsonMemos);
   });
+}
+
+async function listMemo() {
+  const file = "memos.json";
+
+  if (accessFile(file)) {
+    let memos = await readFile(file);
+    let firstMemos = memos.map((memo) => memo.body[0]);
+    let listMemos = firstMemos.join("\n");
+    console.log(listMemos);
+  } else
+    (err) => {
+      console.log(err);
+      throw err;
+    };
 }
