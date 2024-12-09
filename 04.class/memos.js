@@ -9,6 +9,7 @@ if (argv === "-l") {
   listMemo();
 } else if (argv === "-r") {
   // 参照
+  referenceMemo();
 } else if (argv === "-d") {
   // 削除
 } else {
@@ -79,4 +80,25 @@ async function listMemo() {
       console.log(err);
       throw err;
     };
+}
+
+import pkg from "enquirer";
+
+async function referenceMemo() {
+  const { Select } = pkg;
+
+  const file = "memos.json";
+  let memos = await readFile(file);
+
+  const prompt = new Select({
+    name: "memo",
+    message: "Choose a note you want to see:",
+    footer() {
+      let index = this.index;
+      return memos[index].body;
+    },
+
+    choices: memos.map((memo) => memo.body[0]),
+  });
+  prompt.run().catch(console.error);
 }
