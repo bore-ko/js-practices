@@ -12,6 +12,7 @@ if (argv === "-l") {
   referenceMemo();
 } else if (argv === "-d") {
   // 削除
+  deleteMemo();
 } else {
   // 追加
   addMemo();
@@ -101,4 +102,30 @@ async function referenceMemo() {
     choices: memos.map((memo) => memo.body[0]),
   });
   prompt.run().catch(console.error);
+}
+
+async function deleteMemo() {
+  const { Select } = pkg;
+
+  const file = "memos.json";
+  let memos = await readFile(file);
+
+  const prompt = new Select({
+    name: "memo",
+    message: "Choose a memo you want to delete:",
+    choices: memos.map((memo) => memo.body[0]),
+    result() {
+      return this.index + 1;
+    },
+  });
+  prompt
+    .run()
+    .then((result) => {
+      let index = result - 1;
+      memos.splice(index, 1);
+
+      let jsonMemos = JSON.stringify(memos, null, "\t");
+      writeFile(file, jsonMemos);
+    })
+    .catch(console.error);
 }
