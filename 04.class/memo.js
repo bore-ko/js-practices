@@ -18,31 +18,30 @@ class Memo extends FileOperation {
       output: process.stdout,
     });
 
-    let lines = [];
+    const lines = [];
 
-    rl.on("line", (input) => {
-      lines.push(input);
+    rl.on("line", (line) => {
+      lines.push(line);
     });
 
     rl.on("close", async () => {
       if (lines.length === 0) {
         return false;
       }
-      let memos = (await this.access(this.file))
+      const memos = (await this.access(this.file))
         ? await this.read(this.file)
         : [];
-      memos.push({ body: lines });
-      let jsonMemos = JSON.stringify(memos, null, "\t");
+      memos.push({ lines: lines });
+      const jsonMemos = JSON.stringify(memos, null, "\t");
       this.write(this.file, jsonMemos);
     });
   }
 
   async list() {
     if (this.access(this.file)) {
-      let memos = await this.read(this.file);
-      let firstMemos = memos.map((memo) => memo.body[0]);
-      let listMemos = firstMemos.join("\n");
-      console.log(listMemos);
+      const memos = await this.read(this.file);
+      const firstLines = memos.map((memo) => memo.lines[0]);
+      console.log(firstLines.join("\n"));
     } else {
       (err) => {
         console.err(err);
@@ -54,18 +53,18 @@ class Memo extends FileOperation {
   async reference() {
     const { Select } = pkg;
 
-    let memos = await this.read(this.file);
+    const memos = await this.read(this.file);
 
     const prompt = new Select({
       name: "memo",
-      message: "Choose a note you want to see:",
+      message: "Choose a memo you want to see:",
       footer() {
-        let index = this.index;
-        let body = String(memos[index].body).replace(/,/g, "\n");
-        return `\n${body}`;
+        const index = this.index;
+        const lines = String(memos[index].lines).replace(/,/g, "\n");
+        return `\n${lines}`;
       },
 
-      choices: memos.map((memo) => memo.body[0]),
+      choices: memos.map((memo) => memo.lines[0]),
     });
     prompt.run().catch(console.error);
   }
@@ -73,12 +72,12 @@ class Memo extends FileOperation {
   async delete() {
     const { Select } = pkg;
 
-    let memos = await this.read(this.file);
+    const memos = await this.read(this.file);
 
     const prompt = new Select({
       name: "memo",
       message: "Choose a memo you want to delete:",
-      choices: memos.map((memo) => memo.body[0]),
+      choices: memos.map((memo) => memo.lines[0]),
       result() {
         return this.index + 1;
       },
@@ -86,10 +85,10 @@ class Memo extends FileOperation {
     prompt
       .run()
       .then((result) => {
-        let index = result - 1;
+        const index = result - 1;
         memos.splice(index, 1);
 
-        let jsonMemos = JSON.stringify(memos, null, "\t");
+        const jsonMemos = JSON.stringify(memos, null, "\t");
         this.write(this.file, jsonMemos);
       })
       .catch(console.error);
