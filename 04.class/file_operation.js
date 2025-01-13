@@ -5,18 +5,17 @@ export class FileOperation {
     try {
       await fs.access(file);
       return true;
-    } catch {
-      return false;
+    } catch(err) {
+      console.error(err);
     }
   }
 
   async read(file) {
     try {
       const data = await fs.readFile(file, "utf8");
-      return JSON.parse(data);
+      return data
     } catch (err) {
       console.error(err);
-      throw err;
     }
   }
 
@@ -25,7 +24,6 @@ export class FileOperation {
       await fs.writeFile(file, data, "utf8");
     } catch (err) {
       console.error(err);
-      throw err;
     }
   }
 }

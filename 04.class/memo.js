@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import * as readline from "readline";
-import pkg from "enquirer";
+import readline from "readline";
+import enquirer from "enquirer";
 import { FileOperation } from "./file_operation.js";
 
 class Memo extends FileOperation {
@@ -28,18 +28,20 @@ class Memo extends FileOperation {
       if (lines.length === 0) {
         return false;
       }
-      const memos = (await this.access(this.file))
+      const file = (await this.access(this.file))
         ? await this.read(this.file)
         : [];
+      const memos = JSON.parse(file);
       memos.push({ lines: lines });
-      const jsonMemos = JSON.stringify(memos, null, "\t");
+      const jsonMemos = JSON.stringify(memos, null, "  ");
       this.write(this.file, jsonMemos);
     });
   }
 
   async list() {
     if (this.access(this.file)) {
-      const memos = await this.read(this.file);
+      const file = await this.read(this.file);
+      const memos = JSON.parse(file);
       const firstLines = memos.map((memo) => memo.lines[0]);
       console.log(firstLines.join("\n"));
     } else {
@@ -51,11 +53,9 @@ class Memo extends FileOperation {
   }
 
   async reference() {
-    const { Select } = pkg;
-
-    const memos = await this.read(this.file);
-
-    const prompt = new Select({
+    const file = await this.read(this.file);
+    const memos = JSON.parse(file);
+    const prompt = new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to see:",
       footer() {
@@ -70,11 +70,9 @@ class Memo extends FileOperation {
   }
 
   async delete() {
-    const { Select } = pkg;
-
-    const memos = await this.read(this.file);
-
-    const prompt = new Select({
+    const file = await this.read(this.file);
+    const memos = JSON.parse(file);
+    const prompt = new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to delete:",
       choices: memos.map((memo) => memo.lines[0]),
