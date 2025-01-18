@@ -8,7 +8,7 @@ class Memo extends FileOperation {
   constructor() {
     super();
     this.argv = process.argv[2];
-    this.file = "memos.json";
+    this.file_location = "memos.json";
     this.displayMemos();
   }
 
@@ -28,20 +28,20 @@ class Memo extends FileOperation {
       if (lines.length === 0) {
         return false;
       }
-      const file = (await this.access(this.file))
-        ? await this.read(this.file)
+      const file_location = (await this.isAccess(this.file_location))
+        ? await this.read(this.file_location)
         : [];
-      const memos = JSON.parse(file);
+      const memos = JSON.parse(file_location);
       memos.push({ lines: lines });
       const jsonMemos = JSON.stringify(memos, null, "  ");
-      this.write(this.file, jsonMemos);
+      this.write(this.file_location, jsonMemos);
     });
   }
 
   async list() {
-    if (this.access(this.file)) {
-      const file = await this.read(this.file);
-      const memos = JSON.parse(file);
+    if (this.isAccess(this.file_location)) {
+      const file_location = await this.read(this.file_location);
+      const memos = JSON.parse(file_location);
       const firstLines = memos.map((memo) => memo.lines[0]);
       console.log(firstLines.join("\n"));
     } else {
@@ -53,8 +53,8 @@ class Memo extends FileOperation {
   }
 
   async reference() {
-    const file = await this.read(this.file);
-    const memos = JSON.parse(file);
+    const file_location = await this.read(this.file_location);
+    const memos = JSON.parse(file_location);
     const prompt = new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to see:",
@@ -70,8 +70,8 @@ class Memo extends FileOperation {
   }
 
   async delete() {
-    const file = await this.read(this.file);
-    const memos = JSON.parse(file);
+    const file_location = await this.read(this.file_location);
+    const memos = JSON.parse(file_location);
     const prompt = new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to delete:",
@@ -87,7 +87,7 @@ class Memo extends FileOperation {
         memos.splice(index, 1);
 
         const jsonMemos = JSON.stringify(memos, null, "\t");
-        this.write(this.file, jsonMemos);
+        this.write(this.file_location, jsonMemos);
       })
       .catch(console.error);
   }
