@@ -20,22 +20,35 @@ class Memo extends FileOperation {
 
     const lines = [];
 
-    rl.on("line", (line) => {
-      lines.push(line);
-    });
+    const readLines = () => {
+      return new Promise((resolve, reject) => {
+        rl.on("line", (line) => {
+          lines.push(line);
+        });
 
-    rl.on("close", async () => {
-      if (lines.length === 0) {
-        return false;
-      }
+        rl.on("close", () => {
+          if (lines.length === 0) {
+            reject(false);
+          } else {
+            resolve(lines);
+          }
+        });
+      });
+    };
+
+    try {
+      const inputLines = await readLines();
+      rl.close();
       const file_location = (await this.isAccess(this.file_location))
         ? await this.read(this.file_location)
         : [];
       const memos = JSON.parse(file_location);
-      memos.push({ lines: lines });
+      memos.push({ lines: inputLines });
       const jsonMemos = JSON.stringify(memos, null, "  ");
-      this.write(this.file_location, jsonMemos);
-    });
+      await this.write(this.file_location, jsonMemos);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async list() {
@@ -66,7 +79,11 @@ class Memo extends FileOperation {
 
       choices: memos.map((memo) => memo.lines[0]),
     });
-    prompt.run().catch(console.error);
+    try {
+      await prompt.run();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async delete() {
