@@ -4,15 +4,18 @@ import readline from "readline";
 import enquirer from "enquirer";
 import { FileOperation } from "./file_operation.js";
 
-class Memo extends FileOperation {
+class Memo {
+  #argv;
+  #file_location;
+  #fileOperation;
+
   constructor() {
-    super();
-    this.argv = process.argv[2];
-    this.file_location = "memos.json";
-    this.displayMemos();
+    this.#argv = process.argv[2];
+    this.#file_location = "memos.json";
+    this.#fileOperation = new FileOperation();
   }
 
-  async add() {
+  #readLines() {
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
@@ -20,40 +23,24 @@ class Memo extends FileOperation {
 
     const lines = [];
 
-    const readLines = () => {
-      return new Promise((resolve, reject) => {
-        rl.on("line", (line) => {
-          lines.push(line);
-        });
-
-        rl.on("close", () => {
-          if (lines.length === 0) {
-            reject(false);
-          } else {
-            resolve(lines);
-          }
-        });
+    return new Promise((resolve, reject) => {
+      rl.on("line", (line) => {
+        lines.push(line);
       });
-    };
 
-    try {
-      const inputLines = await readLines();
-      rl.close();
-      const file_location = (await this.isAccess(this.file_location))
-        ? await this.read(this.file_location)
-        : [];
-      const memos = JSON.parse(file_location);
-      memos.push({ lines: inputLines });
-      const jsonMemos = JSON.stringify(memos, null, "  ");
-      await this.write(this.file_location, jsonMemos);
-    } catch (err) {
-      console.error(err);
-    }
+      rl.on("close", () => {
+        if (lines.length === 0) {
+          reject(false);
+        } else {
+          resolve(lines);
+        }
+      });
+    });
   }
 
   async list() {
-    if (this.isAccess(this.file_location)) {
-      const file_location = await this.read(this.file_location);
+    if (this.#fileOperation.isAccess(this.#file_location)) {
+      const file_location = await this.#fileOperation.read(this.#file_location);
       const memos = JSON.parse(file_location);
       const firstLines = memos.map((memo) => memo.lines[0]);
       console.log(firstLines.join("\n"));
@@ -66,7 +53,7 @@ class Memo extends FileOperation {
   }
 
   async reference() {
-    const file_location = await this.read(this.file_location);
+    const file_location = await this.#fileOperation.read(this.#file_location);
     const memos = JSON.parse(file_location);
     const prompt = new enquirer.Select({
       name: "memo",
@@ -87,7 +74,7 @@ class Memo extends FileOperation {
   }
 
   async delete() {
-    const file_location = await this.read(this.file_location);
+    const file_location = await this.#fileOperation.read(this.#file_location);
     const memos = JSON.parse(file_location);
     const prompt = new enquirer.Select({
       name: "memo",
@@ -104,17 +91,34 @@ class Memo extends FileOperation {
         memos.splice(index, 1);
 
         const jsonMemos = JSON.stringify(memos, null, "\t");
-        this.write(this.file_location, jsonMemos);
+        this.#fileOperation.write(this.#file_location, jsonMemos);
       })
       .catch(console.error);
   }
 
+  async add() {
+    try {
+      const inputLines = await this.#readLines();
+      const file_location = (await this.#fileOperation.isAccess(
+        this.#file_location,
+      ))
+        ? await this.#fileOperation.read(this.#file_location)
+        : [];
+      const memos = JSON.parse(file_location);
+      memos.push({ lines: inputLines });
+      const jsonMemos = JSON.stringify(memos, null, "  ");
+      await this.#fileOperation.write(this.#file_location, jsonMemos);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   displayMemos() {
-    if (this.argv === "-l") {
+    if (this.#argv === "-l") {
       this.list();
-    } else if (this.argv === "-r") {
+    } else if (this.#argv === "-r") {
       this.reference();
-    } else if (this.argv === "-d") {
+    } else if (this.#argv === "-d") {
       this.delete();
     } else {
       this.add();
@@ -122,4 +126,5 @@ class Memo extends FileOperation {
   }
 }
 
-new Memo();
+const memo = new Memo();
+memo.displayMemos();
