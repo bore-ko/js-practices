@@ -4,16 +4,16 @@ export class FileOperation {
   async isAccess(file_location) {
     try {
       await fs.access(file_location);
-      return true;
-    } catch(err) {
-      console.error(err);
+      return true;   
+    } catch {
+      return false;
     }
   }
 
   async read(file_location) {
     try {
       const data = await fs.readFile(file_location, "utf8");
-      return data
+      return data;
     } catch (err) {
       console.error(err);
     }

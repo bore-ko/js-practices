@@ -4,7 +4,7 @@ import readline from "readline";
 import enquirer from "enquirer";
 import { FileOperation } from "./file_operation.js";
 
-class Memo {
+class MemoApp {
   #argv;
   #file_location;
   #fileOperation;
@@ -15,25 +15,24 @@ class Memo {
     this.#fileOperation = new FileOperation();
   }
 
-  #readLines() {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-
-    const lines = [];
-
+  #readLines(rl) {  
     return new Promise((resolve, reject) => {
+      const lines = [];
+
       rl.on("line", (line) => {
         lines.push(line);
       });
 
       rl.on("close", () => {
         if (lines.length === 0) {
-          reject(false);
+          resolve(false);
         } else {
           resolve(lines);
         }
+      });
+
+      rl.on("error", (err) => {
+        reject(err);
       });
     });
   }
@@ -97,14 +96,21 @@ class Memo {
   }
 
   async add() {
+    const rl = readline.createInterface({
+      input: process.stdin,
+    });
+
     try {
-      const inputLines = await this.#readLines();
-      const file_location = (await this.#fileOperation.isAccess(
-        this.#file_location,
-      ))
-        ? await this.#fileOperation.read(this.#file_location)
-        : [];
-      const memos = JSON.parse(file_location);
+      const inputLines = await this.#readLines(rl);
+      rl.close();
+
+      const lines = await this.#fileOperation.isAccess(this.#file_location);
+      let memos = [];
+      if (lines) {
+        const file_content = await this.#fileOperation.read(this.#file_location)
+          memos = JSON.parse(file_content);
+      }
+     
       memos.push({ lines: inputLines });
       const jsonMemos = JSON.stringify(memos, null, "  ");
       await this.#fileOperation.write(this.#file_location, jsonMemos);
@@ -126,5 +132,5 @@ class Memo {
   }
 }
 
-const memo = new Memo();
+const memo = new MemoApp();
 memo.displayMemos();
