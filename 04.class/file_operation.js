@@ -1,12 +1,16 @@
-import * as fs from "node:fs/promises";
+import fs from "node:fs/promises";
 
 export class FileOperation {
   async isAccess(file_location) {
     try {
       await fs.access(file_location);
-      return true;   
-    } catch {
-      return false;
+      return true;
+    } catch (err) {
+      if (err.code == "ENOENT") {
+        return false;
+      } else {
+        console.error(err);
+      }
     }
   }
 
