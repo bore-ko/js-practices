@@ -15,7 +15,7 @@ class MemoApp {
     this.#fileOperation = new FileOperation();
   }
 
-  #readLines(rl) {  
+  #readLines(rl) {
     return new Promise((resolve, reject) => {
       const lines = [];
 
@@ -37,23 +37,32 @@ class MemoApp {
     });
   }
 
-  async list() {
-    if (this.#fileOperation.isAccess(this.#file_location)) {
-      const file_location = await this.#fileOperation.read(this.#file_location);
-      const memos = JSON.parse(file_location);
-      const firstLines = memos.map((memo) => memo.lines[0]);
-      console.log(firstLines.join("\n"));
-    } else {
-      (err) => {
-        console.err(err);
-        throw err;
-      };
+  async #list() {
+    try {
+      if (await this.#fileOperation.isAccess(this.#file_location)) {
+        const file_location = await this.#fileOperation.read(
+          this.#file_location,
+        );
+        const memos = JSON.parse(file_location);
+        const firstLines = memos.map((memo) => memo.lines[0]);
+        console.log(firstLines.join("\n"));
+      } else {
+        (err) => {
+          console.err(err);
+          throw err;
+        };
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
 
-  async reference() {
+  async #reference() {
     const file_location = await this.#fileOperation.read(this.#file_location);
     const memos = JSON.parse(file_location);
+    if (memos.length === 0) {
+      return;
+    }
     const prompt = new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to see:",
@@ -72,9 +81,12 @@ class MemoApp {
     }
   }
 
-  async delete() {
+  async #delete() {
     const file_location = await this.#fileOperation.read(this.#file_location);
     const memos = JSON.parse(file_location);
+    if (memos.length === 0) {
+      return;
+    }
     const prompt = new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to delete:",
@@ -95,7 +107,7 @@ class MemoApp {
       .catch(console.error);
   }
 
-  async add() {
+  async #add() {
     const rl = readline.createInterface({
       input: process.stdin,
     });
@@ -107,10 +119,12 @@ class MemoApp {
       const lines = await this.#fileOperation.isAccess(this.#file_location);
       let memos = [];
       if (lines) {
-        const file_content = await this.#fileOperation.read(this.#file_location)
-          memos = JSON.parse(file_content);
+        const file_content = await this.#fileOperation.read(
+          this.#file_location,
+        );
+        memos = JSON.parse(file_content);
       }
-     
+
       memos.push({ lines: inputLines });
       const jsonMemos = JSON.stringify(memos, null, "  ");
       await this.#fileOperation.write(this.#file_location, jsonMemos);
@@ -121,13 +135,13 @@ class MemoApp {
 
   displayMemos() {
     if (this.#argv === "-l") {
-      this.list();
+      this.#list();
     } else if (this.#argv === "-r") {
-      this.reference();
+      this.#reference();
     } else if (this.#argv === "-d") {
-      this.delete();
+      this.#delete();
     } else {
-      this.add();
+      this.#add();
     }
   }
 }
