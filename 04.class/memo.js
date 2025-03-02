@@ -67,9 +67,13 @@ class MemoApp {
         choices: memos.map((memo) => memo.lines[0]),
       });
       await prompt.run();
+      console.log(memos[prompt.index].lines.join("\n"));
     } catch (err) {
-      console.error(err);
-      throw err;
+      if (err == "") {
+        console.error("program termination.");
+      } else {
+        throw err;
+      }
     }
   }
 
@@ -103,8 +107,11 @@ class MemoApp {
       const jsonMemos = JSON.stringify(memos, null, "  ");
       await this.#memoManager.write(this.#file_location, jsonMemos);
     } catch (err) {
-      console.error(err);
-      throw err;
+      if (err == "") {
+        console.error("program termination.");
+      } else {
+        throw err;
+      }
     }
   }
 
