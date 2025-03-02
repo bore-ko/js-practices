@@ -69,7 +69,7 @@ class MemoApp {
       await prompt.run();
       console.log(memos[prompt.index].lines.join("\n"));
     } catch (err) {
-      if (err == "") {
+      if (err === "") {
         console.error("program termination.");
       } else {
         throw err;
@@ -107,7 +107,7 @@ class MemoApp {
       const jsonMemos = JSON.stringify(memos, null, "  ");
       await this.#memoManager.write(this.#file_location, jsonMemos);
     } catch (err) {
-      if (err == "") {
+      if (err === "") {
         console.error("program termination.");
       } else {
         throw err;
