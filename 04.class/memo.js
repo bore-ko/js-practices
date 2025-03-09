@@ -5,28 +5,28 @@ import enquirer from "enquirer";
 import { MemoManager } from "./memo_manager.js";
 
 class MemoApp {
-  #argv;
-  #file_location;
+  #option;
+  #fileLocation;
   #memoManager;
 
   constructor() {
-    this.#argv = process.argv[2];
-    this.#file_location = "memos.json";
+    this.#option = process.argv[2];
+    this.#fileLocation = "memos.json";
     this.#memoManager = new MemoManager();
   }
 
   async #list() {
     try {
-      const isAccess = await this.#memoManager.isAccess(this.#file_location);
-      if (!isAccess) {
-        console.log("There are no memo.");
+      const isMemosExists = await this.#memoManager.isAccessible(this.#fileLocation);
+      if (!isMemosExists) {
+        console.log("There are no memos.");
         return;
       }
 
-      const file_location = await this.#memoManager.read(this.#file_location);
-      const memos = JSON.parse(file_location);
+      const readedMemos= await this.#memoManager.read(this.#fileLocation);
+      const memos = JSON.parse(readedMemos);
       if (memos.length === 0) {
-        console.log("There are no memo.");
+        console.log("There are no memos.");
         return;
       }
 
@@ -40,16 +40,16 @@ class MemoApp {
 
   async #reference() {
     try {
-      const isAccess = await this.#memoManager.isAccess(this.#file_location);
-      if (!isAccess) {
-        console.log("There are no memo.");
+      const isMemosExists = await this.#memoManager.isAccessible(this.#fileLocation);
+      if (!isMemosExists) {
+        console.log("There are no memos.");
         return;
       }
 
-      const file_location = await this.#memoManager.read(this.#file_location);
-      const memos = JSON.parse(file_location);
+      const readedMemos = await this.#memoManager.read(this.#fileLocation);
+      const memos = JSON.parse(readedMemos);
       if (memos.length === 0) {
-        console.log("There are no memo.");
+        console.log("There are no memos.");
         return;
       }
 
@@ -79,16 +79,16 @@ class MemoApp {
 
   async #delete() {
     try {
-      const isAccess = await this.#memoManager.isAccess(this.#file_location);
-      if (!isAccess) {
-        console.log("There are no memo.");
+      const isMemosExists = await this.#memoManager.isAccessible(this.#fileLocation);
+      if (!isMemosExists) {
+        console.log("There are no memos.");
         return;
       }
 
-      const file_location = await this.#memoManager.read(this.#file_location);
-      const memos = JSON.parse(file_location);
+      const readedMemos = await this.#memoManager.read(this.#fileLocation);
+      const memos = JSON.parse(readedMemos);
       if (memos.length === 0) {
-        console.log("There are no memo.");
+        console.log("There are no memos.");
         return;
       }
 
@@ -105,7 +105,7 @@ class MemoApp {
       memos.splice(index, 1);
 
       const jsonMemos = JSON.stringify(memos, null, "  ");
-      await this.#memoManager.write(this.#file_location, jsonMemos);
+      await this.#memoManager.write(this.#fileLocation, jsonMemos);
     } catch (err) {
       if (err === "") {
         console.error("program termination.");
@@ -124,28 +124,28 @@ class MemoApp {
       const inputLines = await this.#memoManager.readLines(rl);
       rl.close();
 
-      const isAccess = await this.#memoManager.isAccess(this.#file_location);
+      const isMemosExists = await this.#memoManager.isAccessible(this.#fileLocation);
       let memos = [];
-      if (isAccess) {
-        const file_location = await this.#memoManager.read(this.#file_location);
-        memos = JSON.parse(file_location);
+      if (isMemosExists) {
+        const readedMemos = await this.#memoManager.read(this.#fileLocation);
+        memos = JSON.parse(readedMemos);
       }
 
       memos.push({ lines: inputLines });
       const jsonMemos = JSON.stringify(memos, null, "  ");
-      await this.#memoManager.write(this.#file_location, jsonMemos);
+      await this.#memoManager.write(this.#fileLocation, jsonMemos);
     } catch (err) {
       console.error(err);
       throw err;
     }
   }
 
-  displayMemos() {
-    if (this.#argv === "-l") {
+  OperateApp() {
+    if (this.#option === "-l") {
       this.#list();
-    } else if (this.#argv === "-r") {
+    } else if (this.#option === "-r") {
       this.#reference();
-    } else if (this.#argv === "-d") {
+    } else if (this.#option === "-d") {
       this.#delete();
     } else {
       this.#add();
@@ -154,4 +154,4 @@ class MemoApp {
 }
 
 const memo = new MemoApp();
-memo.displayMemos();
+memo.OperateApp();

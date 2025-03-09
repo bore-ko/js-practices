@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 
 export class MemoManager {
-  async isAccess(file_location) {
+  async isAccessible(fileLocation) {
     try {
-      await fs.access(file_location);
+      await fs.access(fileLocation);
       return true;
     } catch (err) {
       if (err.code == "ENOENT") {
@@ -14,18 +14,18 @@ export class MemoManager {
     }
   }
 
-  async read(file_location) {
+  async read(fileLocation) {
     try {
-      const data = await fs.readFile(file_location, "utf8");
+      const data = await fs.readFile(fileLocation, "utf8");
       return data;
     } catch (err) {
       console.error(err);
     }
   }
 
-  async write(file_location, data) {
+  async write(fileLocation, data) {
     try {
-      await fs.writeFile(file_location, data, "utf8");
+      await fs.writeFile(fileLocation, data, "utf8");
     } catch (err) {
       console.error(err);
     }
