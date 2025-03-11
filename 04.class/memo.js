@@ -57,8 +57,7 @@ class MemoApp {
         name: "memo",
         message: "Choose a memo you want to see:",
         footer() {
-          const index = this.index;
-          const lines = memos[index].lines
+          const lines = memos[this.index].lines
             .filter((line) => line !== "")
             .join("\n");
           return `\n${lines}`;
@@ -124,7 +123,9 @@ class MemoApp {
       const inputLines = await this.#memoManager.readLines(rl);
       rl.close();
 
-      const isMemosExists = await this.#memoManager.isAccessible(this.#fileLocation);
+      const isMemosExists = await this.#memoManager.isAccessible(
+        this.#fileLocation,
+      );
       let memos = [];
       if (isMemosExists) {
         const readedMemos = await this.#memoManager.read(this.#fileLocation);
