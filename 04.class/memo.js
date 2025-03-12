@@ -17,19 +17,25 @@ class MemoApp {
 
   async #list() {
     try {
-      const isMemosExists = await this.#memoManager.isAccessible(this.#fileLocation);
+      const isMemosExists = await this.#memoManager.isAccessible(
+        this.#fileLocation,
+      );
       if (!isMemosExists) {
         console.log("There are no memos.");
         return;
       }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
 
-      const readedMemos= await this.#memoManager.read(this.#fileLocation);
+    try {
+      const readedMemos = await this.#memoManager.read(this.#fileLocation);
       const memos = JSON.parse(readedMemos);
       if (memos.length === 0) {
         console.log("There are no memos.");
         return;
       }
-
       const firstLines = memos.map((memo) => memo.lines[0]);
       console.log(firstLines.join("\n"));
     } catch (err) {
@@ -40,12 +46,19 @@ class MemoApp {
 
   async #reference() {
     try {
-      const isMemosExists = await this.#memoManager.isAccessible(this.#fileLocation);
+      const isMemosExists = await this.#memoManager.isAccessible(
+        this.#fileLocation,
+      );
       if (!isMemosExists) {
         console.log("There are no memos.");
         return;
       }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
 
+    try {
       const readedMemos = await this.#memoManager.read(this.#fileLocation);
       const memos = JSON.parse(readedMemos);
       if (memos.length === 0) {
@@ -78,19 +91,25 @@ class MemoApp {
 
   async #delete() {
     try {
-      const isMemosExists = await this.#memoManager.isAccessible(this.#fileLocation);
+      const isMemosExists = await this.#memoManager.isAccessible(
+        this.#fileLocation,
+      );
       if (!isMemosExists) {
         console.log("There are no memos.");
         return;
       }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
 
+    try {
       const readedMemos = await this.#memoManager.read(this.#fileLocation);
       const memos = JSON.parse(readedMemos);
       if (memos.length === 0) {
         console.log("There are no memos.");
         return;
       }
-
       const prompt = new enquirer.Select({
         name: "memo",
         message: "Choose a memo you want to delete:",
@@ -131,7 +150,6 @@ class MemoApp {
         const readedMemos = await this.#memoManager.read(this.#fileLocation);
         memos = JSON.parse(readedMemos);
       }
-
       memos.push({ lines: inputLines });
       const jsonMemos = JSON.stringify(memos, null, "  ");
       await this.#memoManager.write(this.#fileLocation, jsonMemos);
