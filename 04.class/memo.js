@@ -36,8 +36,9 @@ class MemoApp {
         console.log("There are no memos.");
         return;
       }
-      const firstLines = memos.map((memo) => memo.lines[0]);
-      console.log(firstLines.join("\n"));
+      memos.forEach((memo) => {
+        console.log(memo.lines[0]);
+      });
     } catch (err) {
       console.error(err);
       throw err;
@@ -70,9 +71,7 @@ class MemoApp {
         name: "memo",
         message: "Choose a memo you want to see:",
         footer() {
-          const lines = memos[this.index].lines
-            .filter((line) => line !== "")
-            .join("\n");
+          const lines = memos[this.index].lines.join("\n");
           return `\n${lines}`;
         },
 
