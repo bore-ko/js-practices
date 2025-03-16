@@ -76,9 +76,12 @@ class MemoApp {
         },
 
         choices: memos.map((memo) => memo.lines[0]),
+        result() {
+          return memos[this.index].lines.join("\n");
+        },
       });
-      await prompt.run();
-      console.log(memos[prompt.index].lines.join("\n"));
+      const response = await prompt.run();
+      console.log(response);
     } catch (err) {
       if (err === "") {
         console.error("program termination.");
