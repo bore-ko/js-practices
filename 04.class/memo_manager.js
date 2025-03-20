@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import readline from "readline";
 
 export class MemoManager {
   async isAccessible(fileLocation) {
@@ -31,7 +32,11 @@ export class MemoManager {
     }
   }
 
-  readLines(rl) {
+  readLines() {
+    const rl = readline.createInterface({
+      input: process.stdin,
+    });
+
     return new Promise((resolve, reject) => {
       const lines = [];
 
@@ -41,7 +46,7 @@ export class MemoManager {
 
       rl.on("close", () => {
         if (lines.length === 0) {
-          resolve(false);
+          resolve([]);
         } else {
           resolve(lines);
         }

@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import readline from "readline";
 import enquirer from "enquirer";
 import { MemoManager } from "./memo_manager.js";
 
@@ -136,14 +135,8 @@ class MemoApp {
   }
 
   async #add() {
-    const rl = readline.createInterface({
-      input: process.stdin,
-    });
-
     try {
-      const inputLines = await this.#memoManager.readLines(rl);
-      rl.close();
-
+      const inputLines = await this.#memoManager.readLines();
       const isMemosExists = await this.#memoManager.isAccessible(
         this.#fileLocation,
       );
