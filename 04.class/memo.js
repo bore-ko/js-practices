@@ -124,23 +124,31 @@ class MemoApp {
   }
 
   async #add() {
+    let access;
+    try {
+      await fs.access(this.#fileLocation);
+    } catch {
+      access = false;
+    }
+
+    let readedMemos;
+    if (access !== false) {
+      readedMemos = await fs.readFile(this.#fileLocation, "utf8");
+    }
+
+    let memos;
+    memos = await this.#memoManager.json_parse(readedMemos);
     try {
       const inputLines = await this.#memoManager.readLines();
-      let memos = [];
-      try {
-        await fs.access(this.#fileLocation);
-        const readedMemos = await fs.readFile(this.#fileLocation, "utf8");
-        memos = JSON.parse(readedMemos);
-        memos.push({ lines: inputLines });
-      } catch {
-        memos.push({ lines: inputLines });
-      }
-      const jsonMemos = JSON.stringify(memos, null, "  ");
-      try {
-        await fs.writeFile(this.#fileLocation, jsonMemos, "utf8");
-      } catch (err) {
-        console.error(err);
-      }
+      memos.push({ lines: inputLines });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+
+    const jsonMemos = JSON.stringify(memos, null, "  ");
+    try {
+      await fs.writeFile(this.#fileLocation, jsonMemos, "utf8");
     } catch (err) {
       console.error(err);
       throw err;

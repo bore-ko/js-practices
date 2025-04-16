@@ -1,6 +1,18 @@
 import readline from "readline";
 
 export class MemoManager {
+  json_parse(readedMemos) {
+    return new Promise((resolve) => {
+      let memos = [];
+      if (readedMemos) {
+        memos = JSON.parse(readedMemos);
+        resolve(memos);
+      } else {
+        resolve(memos);
+      }
+    });
+  }
+
   readLines() {
     const rl = readline.createInterface({
       input: process.stdin,
