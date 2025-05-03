@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 
 import fs from "node:fs/promises";
-import enquirer from "enquirer";
-import { MemoManager } from "./memo_manager.js";
+import { MemoPreparation } from "./memo_preparation.js";
 
 class MemoApp {
   #option;
   #fileLocation;
-  #memoManager;
+  #MemoPreparation;
 
   constructor() {
     this.#option = process.argv[2];
     this.#fileLocation = "memos.json";
-    this.#memoManager = new MemoManager();
+    this.#MemoPreparation = new MemoPreparation();
   }
 
   async #list() {
@@ -29,15 +28,10 @@ class MemoApp {
       return;
     }
 
-    try {
-      const memos = JSON.parse(readedMemos);
-      memos.forEach((memo) => {
-        console.log(memo.lines[0]);
-      });
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
+    const memos = await this.#MemoPreparation.parseJson(readedMemos);
+    memos.forEach((memo) => {
+      console.log(memo.lines[0]);
+    });
   }
 
   async #reference() {
@@ -54,21 +48,9 @@ class MemoApp {
       return;
     }
 
+    const memos = await this.#MemoPreparation.parseJson(readedMemos);
+    const prompt = this.#MemoPreparation.referencePrompt(memos);
     try {
-      const memos = JSON.parse(readedMemos);
-      const prompt = new enquirer.Select({
-        name: "memo",
-        message: "Choose a memo you want to see:",
-        footer() {
-          const lines = memos[this.index].lines.join("\n");
-          return `\n${lines}`;
-        },
-
-        choices: memos.map((memo) => memo.lines[0]),
-        result() {
-          return memos[this.index].lines.join("\n");
-        },
-      });
       const response = await prompt.run();
       console.log(response);
     } catch (err) {
@@ -94,26 +76,12 @@ class MemoApp {
       return;
     }
 
+    const memos = await this.#MemoPreparation.parseJson(readedMemos);
+    const prompt = this.#MemoPreparation.deletePrompt(memos);
     try {
-      const memos = JSON.parse(readedMemos);
-      const prompt = new enquirer.Select({
-        name: "memo",
-        message: "Choose a memo you want to delete:",
-        choices: memos.map((memo) => memo.lines[0]),
-        result() {
-          return this.index + 1;
-        },
-      });
       const deleteMemo = await prompt.run();
       const index = deleteMemo - 1;
       memos.splice(index, 1);
-
-      const jsonMemos = JSON.stringify(memos, null, "  ");
-      try {
-        await fs.writeFile(this.#fileLocation, jsonMemos, "utf8");
-      } catch (err) {
-        console.error(err);
-      }
     } catch (err) {
       if (err === "") {
         console.error("program termination.");
@@ -121,25 +89,32 @@ class MemoApp {
         throw err;
       }
     }
+
+    const jsonMemos = JSON.stringify(memos, null, "  ");
+    try {
+      await fs.writeFile(this.#fileLocation, jsonMemos, "utf8");
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
 
   async #add() {
-    let access;
+    let isMemo;
     try {
       await fs.access(this.#fileLocation);
     } catch {
-      access = false;
+      isMemo = false;
     }
 
     let readedMemos;
-    if (access !== false) {
+    if (isMemo !== false) {
       readedMemos = await fs.readFile(this.#fileLocation, "utf8");
     }
 
-    let memos;
-    memos = await this.#memoManager.json_parse(readedMemos);
+    const memos = await this.#MemoPreparation.parseJson(readedMemos);
     try {
-      const inputLines = await this.#memoManager.readLines();
+      const inputLines = await this.#MemoPreparation.readLines();
       memos.push({ lines: inputLines });
     } catch (err) {
       console.error(err);
