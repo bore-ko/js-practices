@@ -14,6 +14,18 @@ class MemoApp {
     this.#MemoPreparation = new MemoPreparation();
   }
 
+  OperateApp() {
+    if (this.#option === "-l") {
+      this.#list();
+    } else if (this.#option === "-r") {
+      this.#reference();
+    } else if (this.#option === "-d") {
+      this.#delete();
+    } else {
+      this.#add();
+    }
+  }
+
   async #list() {
     try {
       await fs.access(this.#fileLocation);
@@ -127,18 +139,6 @@ class MemoApp {
     } catch (err) {
       console.error(err);
       throw err;
-    }
-  }
-
-  OperateApp() {
-    if (this.#option === "-l") {
-      this.#list();
-    } else if (this.#option === "-r") {
-      this.#reference();
-    } else if (this.#option === "-d") {
-      this.#delete();
-    } else {
-      this.#add();
     }
   }
 }
