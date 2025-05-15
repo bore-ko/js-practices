@@ -3,7 +3,7 @@
 import fs from "node:fs/promises";
 import { MemoPreparation } from "./memo_preparation.js";
 
-class MemoApp {
+class Memo {
   #option;
   #fileLocation;
   #MemoPreparation;
@@ -143,5 +143,5 @@ class MemoApp {
   }
 }
 
-const memo = new MemoApp();
+const memo = new Memo();
 memo.OperateApp();
