@@ -6,15 +6,15 @@ import { MemoPreparation } from "./memo_preparation.js";
 class Memo {
   #option;
   #fileLocation;
-  #MemoPreparation;
+  #memoPreparation;
 
   constructor() {
     this.#option = process.argv[2];
     this.#fileLocation = "memos.json";
-    this.#MemoPreparation = new MemoPreparation();
+    this.#memoPreparation = new MemoPreparation();
   }
 
-  OperateApp() {
+  operateApp() {
     if (this.#option === "-l") {
       this.#list();
     } else if (this.#option === "-r") {
@@ -40,7 +40,7 @@ class Memo {
       return;
     }
 
-    const memos = await this.#MemoPreparation.parseJson(readedMemos);
+    const memos = await this.#memoPreparation.parseJson(readedMemos);
     memos.forEach((memo) => {
       console.log(memo.lines[0]);
     });
@@ -60,16 +60,16 @@ class Memo {
       return;
     }
 
-    const memos = await this.#MemoPreparation.parseJson(readedMemos);
-    const prompt = this.#MemoPreparation.referencePrompt(memos);
+    const memos = await this.#memoPreparation.parseJson(readedMemos);
+    const prompt = this.#memoPreparation.referencePrompt(memos);
     try {
       const response = await prompt.run();
       console.log(response);
-    } catch (err) {
-      if (err === "") {
+    } catch (error) {
+      if (error === "") {
         console.error("program termination.");
       } else {
-        throw err;
+        throw error;
       }
     }
   }
@@ -88,26 +88,26 @@ class Memo {
       return;
     }
 
-    const memos = await this.#MemoPreparation.parseJson(readedMemos);
-    const prompt = this.#MemoPreparation.deletePrompt(memos);
+    const memos = await this.#memoPreparation.parseJson(readedMemos);
+    const prompt = this.#memoPreparation.deletePrompt(memos);
     try {
       const deleteMemo = await prompt.run();
       const index = deleteMemo - 1;
       memos.splice(index, 1);
-    } catch (err) {
-      if (err === "") {
+    } catch (error) {
+      if (error === "") {
         console.error("program termination.");
       } else {
-        throw err;
+        throw error;
       }
     }
 
     const jsonMemos = JSON.stringify(memos, null, "  ");
     try {
       await fs.writeFile(this.#fileLocation, jsonMemos, "utf8");
-    } catch (err) {
-      console.error(err);
-      throw err;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 
@@ -124,24 +124,24 @@ class Memo {
       readedMemos = await fs.readFile(this.#fileLocation, "utf8");
     }
 
-    const memos = await this.#MemoPreparation.parseJson(readedMemos);
+    const memos = await this.#memoPreparation.parseJson(readedMemos);
     try {
-      const inputLines = await this.#MemoPreparation.readLines();
+      const inputLines = await this.#memoPreparation.readLines();
       memos.push({ lines: inputLines });
-    } catch (err) {
-      console.error(err);
-      throw err;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
 
     const jsonMemos = JSON.stringify(memos, null, "  ");
     try {
       await fs.writeFile(this.#fileLocation, jsonMemos, "utf8");
-    } catch (err) {
-      console.error(err);
-      throw err;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 }
 
 const memo = new Memo();
-memo.OperateApp();
+memo.operateApp();

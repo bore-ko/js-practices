@@ -59,8 +59,8 @@ export class MemoPreparation {
         }
       });
 
-      rl.on("error", (err) => {
-        reject(err);
+      rl.on("error", (error) => {
+        reject(error);
       });
     });
   }
