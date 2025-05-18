@@ -34,13 +34,13 @@ class Memo {
       return;
     }
 
-    const readedMemos = await fs.readFile(this.#fileLocation, "utf8");
-    if (readedMemos === "[]") {
+    const jsonList = await fs.readFile(this.#fileLocation, "utf8");
+    const memos = JSON.parse(jsonList);
+    if (memos.length === 0) {
       console.log("There are no memos.");
       return;
     }
 
-    const memos = await this.#memoPreparation.parseJson(readedMemos);
     memos.forEach((memo) => {
       console.log(memo.lines[0]);
     });
@@ -54,13 +54,13 @@ class Memo {
       return;
     }
 
-    const readedMemos = await fs.readFile(this.#fileLocation, "utf8");
-    if (readedMemos === "[]") {
+    const jsonList = await fs.readFile(this.#fileLocation, "utf8");
+    const memos = JSON.parse(jsonList);
+    if (memos.length === 0) {
       console.log("There are no memos.");
       return;
     }
 
-    const memos = await this.#memoPreparation.parseJson(readedMemos);
     const prompt = this.#memoPreparation.referencePrompt(memos);
     try {
       const response = await prompt.run();
@@ -82,13 +82,13 @@ class Memo {
       return;
     }
 
-    const readedMemos = await fs.readFile(this.#fileLocation, "utf8");
-    if (readedMemos === "[]") {
+    const jsonList = await fs.readFile(this.#fileLocation, "utf8");
+    const memos = JSON.parse(jsonList);
+    if (memos.length === 0) {
       console.log("There are no memos.");
       return;
     }
 
-    const memos = await this.#memoPreparation.parseJson(readedMemos);
     const prompt = this.#memoPreparation.deletePrompt(memos);
     try {
       const deleteMemo = await prompt.run();
@@ -124,7 +124,7 @@ class Memo {
       readedMemos = await fs.readFile(this.#fileLocation, "utf8");
     }
 
-    const memos = await this.#memoPreparation.parseJson(readedMemos);
+    const memos = JSON.parse(readedMemos);
     try {
       const inputLines = await this.#memoPreparation.readLines();
       memos.push({ lines: inputLines });

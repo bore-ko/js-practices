@@ -2,16 +2,6 @@ import readline from "readline";
 import enquirer from "enquirer";
 
 export class MemoPreparation {
-  parseJson(readedMemos) {
-    return new Promise((resolve) => {
-      let memos = [];
-      if (readedMemos) {
-        memos = JSON.parse(readedMemos);
-      }
-      resolve(memos);
-    });
-  }
-
   referencePrompt(memos) {
     return new enquirer.Select({
       name: "memo",
