@@ -82,7 +82,7 @@ class Memo {
       return;
     }
 
-    const jsonList = await fs.readFile(this.#fileLocation, "utf8");
+    let jsonList = await fs.readFile(this.#fileLocation, "utf8");
     const memos = JSON.parse(jsonList);
     if (memos.length === 0) {
       console.log("There are no memos.");
@@ -102,9 +102,9 @@ class Memo {
       }
     }
 
-    const jsonMemos = JSON.stringify(memos, null, "  ");
+    jsonList = JSON.stringify(memos, null, 2);
     try {
-      await fs.writeFile(this.#fileLocation, jsonMemos, "utf8");
+      await fs.writeFile(this.#fileLocation, jsonList, "utf8");
     } catch (error) {
       console.error(error);
       throw error;
@@ -119,12 +119,12 @@ class Memo {
       isMemo = false;
     }
 
-    let readedMemos;
+    let jsonList;
     if (isMemo !== false) {
-      readedMemos = await fs.readFile(this.#fileLocation, "utf8");
+      jsonList = await fs.readFile(this.#fileLocation, "utf8");
     }
 
-    const memos = JSON.parse(readedMemos);
+    const memos = JSON.parse(jsonList);
     try {
       const inputLines = await this.#memoPreparation.readLines();
       memos.push({ lines: inputLines });
@@ -133,9 +133,9 @@ class Memo {
       throw error;
     }
 
-    const jsonMemos = JSON.stringify(memos, null, "  ");
+    jsonList = JSON.stringify(memos, null, 2);
     try {
-      await fs.writeFile(this.#fileLocation, jsonMemos, "utf8");
+      await fs.writeFile(this.#fileLocation, jsonList, "utf8");
     } catch (error) {
       console.error(error);
       throw error;
