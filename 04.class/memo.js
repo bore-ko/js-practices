@@ -112,16 +112,12 @@ class Memo {
   }
 
   async #add() {
-    let isMemo;
+    let jsonList;
     try {
       await fs.access(this.#fileLocation);
-    } catch {
-      isMemo = false;
-    }
-
-    let jsonList;
-    if (isMemo !== false) {
       jsonList = await fs.readFile(this.#fileLocation, "utf8");
+    } catch {
+      jsonList = JSON.stringify([], null, 2);
     }
 
     const memos = JSON.parse(jsonList);
