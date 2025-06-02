@@ -1,4 +1,3 @@
-import readline from "readline";
 import enquirer from "enquirer";
 
 export class MemoPreparation {
@@ -32,32 +31,4 @@ export class MemoPreparation {
       },
     });
   }
-
-  readLines() {
-    const rl = readline.createInterface({
-      input: process.stdin,
-    });
-
-    return new Promise((resolve, reject) => {
-      const lines = [];
-
-      rl.on("line", (line) => {
-        lines.push(line);
-      });
-
-      rl.on("close", () => {
-        if (lines.length === 0) {
-          resolve([]);
-        } else {
-          resolve(lines);
-        }
-      });
-
-      rl.on("error", (error) => {
-        reject(error);
-      });
-    });
-  }
 }
-
-new MemoPreparation();

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import fs from "node:fs/promises";
+import { createInterface } from "readline/promises";
+import { once } from "events";
 import { MemoPreparation } from "./memo_preparation.js";
 
 class Memo {
@@ -120,14 +122,10 @@ class Memo {
       jsonList = JSON.stringify([], null, 2);
     }
 
-    const memos = JSON.parse(jsonList);
-    try {
-      const inputLines = await this.#memoPreparation.readLines();
-      memos.push({ lines: inputLines });
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    let memos = JSON.parse(jsonList);
+    const inputLines = await this.#readLines();
+
+    memos.push({ lines: inputLines });
 
     jsonList = JSON.stringify(memos, null, 2);
     try {
@@ -136,6 +134,19 @@ class Memo {
       console.error(error);
       throw error;
     }
+  }
+
+  async #readLines() {
+    const rl = createInterface({ input: process.stdin });
+    const lines = [];
+
+    rl.on("line", (line) => {
+      lines.push(line);
+    });
+
+    await once(rl, "close");
+
+    return lines;
   }
 }
 
