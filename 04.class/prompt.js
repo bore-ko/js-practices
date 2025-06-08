@@ -1,7 +1,7 @@
 import enquirer from "enquirer";
 
-export class MemoPreparation {
-  referencePrompt(memos) {
+export class Prompt {
+  reference(memos) {
     return new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to see:",
@@ -17,7 +17,7 @@ export class MemoPreparation {
     });
   }
 
-  deletePrompt(memos) {
+  delete(memos) {
     return new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to delete:",
