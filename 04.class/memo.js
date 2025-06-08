@@ -2,5 +2,5 @@
 
 import { MemoApp } from "./memo_app.js";
 
-const memo = new MemoApp();
-memo.operateApp();
+const memoApp = new MemoApp();
+memoApp.operateApp();

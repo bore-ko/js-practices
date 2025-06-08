@@ -1,7 +1,7 @@
 import enquirer from "enquirer";
 
 export class Prompt {
-  reference(memos) {
+  refer(memos) {
     return new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to see:",
@@ -27,7 +27,7 @@ export class Prompt {
       },
       choices: memos.map((memo) => memo.lines[0]),
       result() {
-        return memos[this.index].lines.join("\n");
+        return this.index;
       },
     });
   }

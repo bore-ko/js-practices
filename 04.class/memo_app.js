@@ -18,7 +18,7 @@ export class MemoApp {
     if (this.#option === "-l") {
       this.#list();
     } else if (this.#option === "-r") {
-      this.#reference();
+      this.#refer();
     } else if (this.#option === "-d") {
       this.#delete();
     } else {
@@ -46,7 +46,7 @@ export class MemoApp {
     });
   }
 
-  async #reference() {
+  async #refer() {
     try {
       await fs.access(this.#fileLocation);
     } catch {
@@ -61,10 +61,10 @@ export class MemoApp {
       return;
     }
 
-    const prompt = this.#prompt.reference(memos);
+    const prompt = this.#prompt.refer(memos);
     try {
-      const response = await prompt.run();
-      console.log(response);
+      const referencedMemo = await prompt.run();
+      console.log(referencedMemo);
     } catch (error) {
       if (error === "") {
         console.error("program termination.");
@@ -91,9 +91,8 @@ export class MemoApp {
 
     const prompt = this.#prompt.delete(memos);
     try {
-      const deleteMemo = await prompt.run();
-      const index = deleteMemo - 1;
-      memos.splice(index, 1);
+      const deletionIndex = await prompt.run();
+      memos.splice(deletionIndex, 1);
     } catch (error) {
       if (error === "") {
         console.error("program termination.");
