@@ -1,17 +1,18 @@
 import fs from "node:fs/promises";
-import { createInterface } from "readline/promises";
-import { once } from "events";
 import { Prompt } from "./prompt.js";
+import { StandardInput } from "./standard_input.js";
 
 export class MemoApp {
   #option;
   #fileLocation;
   #prompt;
+  #standardInput;
 
   constructor() {
     this.#option = process.argv[2];
     this.#fileLocation = "memos.json";
     this.#prompt = new Prompt();
+    this.#standardInput = new StandardInput();
   }
 
   operateApp() {
@@ -102,12 +103,7 @@ export class MemoApp {
     }
 
     jsonList = JSON.stringify(memos, null, 2);
-    try {
-      await fs.writeFile(this.#fileLocation, jsonList, "utf8");
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    await fs.writeFile(this.#fileLocation, jsonList, "utf8");
   }
 
   async #add() {
@@ -120,29 +116,10 @@ export class MemoApp {
     }
 
     let memos = JSON.parse(jsonList);
-    const inputLines = await this.#readLines();
-
+    const inputLines = await this.#standardInput.readLines();
     memos.push({ lines: inputLines });
 
     jsonList = JSON.stringify(memos, null, 2);
-    try {
-      await fs.writeFile(this.#fileLocation, jsonList, "utf8");
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  async #readLines() {
-    const rl = createInterface({ input: process.stdin });
-    const lines = [];
-
-    rl.on("line", (line) => {
-      lines.push(line);
-    });
-
-    await once(rl, "close");
-
-    return lines;
+    await fs.writeFile(this.#fileLocation, jsonList, "utf8");
   }
 }

@@ -9,7 +9,6 @@ export class Prompt {
         const lines = memos[this.index].lines.join("\n");
         return `\n${lines}`;
       },
-
       choices: memos.map((memo) => memo.lines[0]),
       result() {
         return memos[this.index].lines.join("\n");
