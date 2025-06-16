@@ -15,7 +15,7 @@ export class MemoApp {
     this.#standardInput = new StandardInput();
   }
 
-  operateApp() {
+  operate() {
     if (this.#option === "-l") {
       this.#list();
     } else if (this.#option === "-r") {

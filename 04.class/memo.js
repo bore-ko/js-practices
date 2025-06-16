@@ -3,4 +3,4 @@
 import { MemoApp } from "./memo_app.js";
 
 const memoApp = new MemoApp();
-memoApp.operateApp();
+memoApp.operate();
