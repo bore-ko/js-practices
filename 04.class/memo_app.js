@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import { Prompt } from "./prompt.js";
 import { StandardInput } from "./standard_input.js";
 
-export class MemoApp {
+export default class MemoApp {
   #option;
   #fileLocation;
   #prompt;
@@ -27,42 +27,49 @@ export class MemoApp {
     }
   }
 
-  async #list() {
+  async memoNotExists(fileLocation) {
     try {
-      await fs.access(this.#fileLocation);
+      await fs.access(fileLocation);
     } catch {
       console.error("There are no memos.");
-      return;
     }
+  }
 
-    const jsonList = await fs.readFile(this.#fileLocation, "utf8");
+  async jsonList(fileLocation) {
+    const jsonList = await fs.readFile(fileLocation, "utf8");
     const memos = JSON.parse(jsonList);
     if (memos.length === 0) {
       console.log("There are no memos.");
       return;
+    } else {
+      return memos;
     }
+  }
 
-    memos.forEach((memo) => {
-      console.log(memo.lines[0]);
-    });
+  async #list() {
+    this.memoNotExists(this.#fileLocation);
+
+    try {
+      const memos = await this.jsonList(this.#fileLocation);
+      memos.forEach((memo) => {
+        console.log(memo.lines[0]);
+      });
+    } catch {
+      return;
+    }
   }
 
   async #refer() {
+    this.memoNotExists(this.#fileLocation);
+
+    let prompt;
     try {
-      await fs.access(this.#fileLocation);
+      const memos = await this.jsonList(this.#fileLocation);
+      prompt = this.#prompt.refer(memos);
     } catch {
-      console.error("There are no memos.");
       return;
     }
 
-    const jsonList = await fs.readFile(this.#fileLocation, "utf8");
-    const memos = JSON.parse(jsonList);
-    if (memos.length === 0) {
-      console.log("There are no memos.");
-      return;
-    }
-
-    const prompt = this.#prompt.refer(memos);
     try {
       const referencedMemo = await prompt.run();
       console.log(referencedMemo);
@@ -76,21 +83,17 @@ export class MemoApp {
   }
 
   async #delete() {
+    this.memoNotExists(this.#fileLocation);
+
+    let memos;
+    let prompt;
     try {
-      await fs.access(this.#fileLocation);
+      memos = await this.jsonList(this.#fileLocation);
+      prompt = this.#prompt.delete(memos);
     } catch {
-      console.error("There are no memos.");
       return;
     }
 
-    let jsonList = await fs.readFile(this.#fileLocation, "utf8");
-    const memos = JSON.parse(jsonList);
-    if (memos.length === 0) {
-      console.log("There are no memos.");
-      return;
-    }
-
-    const prompt = this.#prompt.delete(memos);
     try {
       const deletionIndex = await prompt.run();
       memos.splice(deletionIndex, 1);
@@ -102,7 +105,7 @@ export class MemoApp {
       }
     }
 
-    jsonList = JSON.stringify(memos, null, 2);
+    const jsonList = JSON.stringify(memos, null, 2);
     await fs.writeFile(this.#fileLocation, jsonList, "utf8");
   }
 
