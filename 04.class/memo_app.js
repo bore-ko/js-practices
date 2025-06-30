@@ -27,7 +27,7 @@ export default class MemoApp {
     }
   }
 
-  async memoNotExists(fileLocation) {
+  async #checkExistenceMemo(fileLocation) {
     try {
       await fs.access(fileLocation);
     } catch {
@@ -35,9 +35,9 @@ export default class MemoApp {
     }
   }
 
-  async jsonList(fileLocation) {
-    const jsonList = await fs.readFile(fileLocation, "utf8");
-    const memos = JSON.parse(jsonList);
+  async #createMemoObjct(fileLocation) {
+    const json = await fs.readFile(fileLocation, "utf8");
+    const memos = JSON.parse(json);
     if (memos.length === 0) {
       console.log("There are no memos.");
       return;
@@ -47,10 +47,10 @@ export default class MemoApp {
   }
 
   async #list() {
-    this.memoNotExists(this.#fileLocation);
+    this.#checkExistenceMemo(this.#fileLocation);
 
     try {
-      const memos = await this.jsonList(this.#fileLocation);
+      const memos = await this.#createMemoObjct(this.#fileLocation);
       memos.forEach((memo) => {
         console.log(memo.lines[0]);
       });
@@ -60,11 +60,11 @@ export default class MemoApp {
   }
 
   async #refer() {
-    this.memoNotExists(this.#fileLocation);
+    this.#checkExistenceMemo(this.#fileLocation);
 
     let prompt;
     try {
-      const memos = await this.jsonList(this.#fileLocation);
+      const memos = await this.#createMemoObjct(this.#fileLocation);
       prompt = this.#prompt.refer(memos);
     } catch {
       return;
@@ -83,12 +83,12 @@ export default class MemoApp {
   }
 
   async #delete() {
-    this.memoNotExists(this.#fileLocation);
+    this.#checkExistenceMemo(this.#fileLocation);
 
     let memos;
     let prompt;
     try {
-      memos = await this.jsonList(this.#fileLocation);
+      memos = await this.#createMemoObjct(this.#fileLocation);
       prompt = this.#prompt.delete(memos);
     } catch {
       return;
@@ -105,24 +105,24 @@ export default class MemoApp {
       }
     }
 
-    const jsonList = JSON.stringify(memos, null, 2);
-    await fs.writeFile(this.#fileLocation, jsonList, "utf8");
+    const jsonMemo = JSON.stringify(memos, null, 2);
+    await fs.writeFile(this.#fileLocation, jsonMemo, "utf8");
   }
 
   async #add() {
-    let jsonList;
+    let json;
     try {
       await fs.access(this.#fileLocation);
-      jsonList = await fs.readFile(this.#fileLocation, "utf8");
+      json = await fs.readFile(this.#fileLocation, "utf8");
     } catch {
-      jsonList = JSON.stringify([], null, 2);
+      json = JSON.stringify([], null, 2);
     }
 
-    let memos = JSON.parse(jsonList);
-    const inputLines = await this.#standardInput.readLines();
-    memos.push({ lines: inputLines });
+    let memos = JSON.parse(json);
+    const lines = await this.#standardInput.readLines();
+    memos.push({ lines: lines });
 
-    jsonList = JSON.stringify(memos, null, 2);
-    await fs.writeFile(this.#fileLocation, jsonList, "utf8");
+    const jsonMemo = JSON.stringify(memos, null, 2);
+    await fs.writeFile(this.#fileLocation, jsonMemo, "utf8");
   }
 }
