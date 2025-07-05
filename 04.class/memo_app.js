@@ -72,7 +72,7 @@ export default class MemoApp {
 
     try {
       const referencedMemo = await prompt.run();
-      console.log(referencedMemo);
+      console.log(referencedMemo.lines.join("\n"));
     } catch (error) {
       if (error === "") {
         console.error("program termination.");

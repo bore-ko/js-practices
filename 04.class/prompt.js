@@ -11,7 +11,7 @@ export class Prompt {
       },
       choices: memos.map((memo) => memo.lines[0]),
       result() {
-        return memos[this.index].lines.join("\n");
+        return memos[this.index];
       },
     });
   }
