@@ -1,17 +1,17 @@
 import fs from "node:fs/promises";
-import { Prompt } from "./prompt.js";
+import { MemoPrompt } from "./memo_prompt.js";
 import { StandardInput } from "./standard_input.js";
 
 export default class MemoApp {
   #option;
   #fileLocation;
-  #prompt;
+  #memoPrompt;
   #standardInput;
 
   constructor() {
     this.#option = process.argv[2];
     this.#fileLocation = "memos.json";
-    this.#prompt = new Prompt();
+    this.#memoPrompt = new MemoPrompt();
     this.#standardInput = new StandardInput();
   }
 
@@ -65,7 +65,7 @@ export default class MemoApp {
     let prompt;
     try {
       const memos = await this.#createMemoObjct(this.#fileLocation);
-      prompt = this.#prompt.refer(memos);
+      prompt = this.#memoPrompt.refer(memos);
     } catch {
       return;
     }
@@ -89,7 +89,7 @@ export default class MemoApp {
     let prompt;
     try {
       memos = await this.#createMemoObjct(this.#fileLocation);
-      prompt = this.#prompt.delete(memos);
+      prompt = this.#memoPrompt.delete(memos);
     } catch {
       return;
     }

@@ -1,6 +1,6 @@
 import enquirer from "enquirer";
 
-export class Prompt {
+export class MemoPrompt {
   refer(memos) {
     return new enquirer.Select({
       name: "memo",
