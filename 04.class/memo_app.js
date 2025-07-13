@@ -32,6 +32,7 @@ export default class MemoApp {
       await fs.access(fileLocation);
     } catch {
       console.error("There are no memos.");
+      throw new Error();
     }
   }
 
@@ -39,39 +40,48 @@ export default class MemoApp {
     const json = await fs.readFile(fileLocation, "utf8");
     const memos = JSON.parse(json);
     if (memos.length === 0) {
-      console.log("There are no memos.");
-      return;
+      console.error("There are no memos.");
+      throw new Error();
     } else {
       return memos;
     }
   }
 
   async #list() {
-    this.#checkExistenceMemo(this.#fileLocation);
-
     try {
-      const memos = await this.#createMemoObjct(this.#fileLocation);
-      memos.forEach((memo) => {
-        console.log(memo.lines[0]);
-      });
+      await this.#checkExistenceMemo(this.#fileLocation);
     } catch {
       return;
     }
+
+    let memos;
+    try {
+      memos = await this.#createMemoObjct(this.#fileLocation);
+    } catch {
+      return;
+    }
+
+    memos.forEach((memo) => {
+      console.log(memo.lines[0]);
+    });
   }
 
   async #refer() {
-    this.#checkExistenceMemo(this.#fileLocation);
-
-    let prompt;
     try {
-      const memos = await this.#createMemoObjct(this.#fileLocation);
-      prompt = this.#memoPrompt.refer(memos);
+      await this.#checkExistenceMemo(this.#fileLocation);
+    } catch {
+      return;
+    }
+
+    let memos;
+    try {
+      memos = await this.#createMemoObjct(this.#fileLocation);
     } catch {
       return;
     }
 
     try {
-      const referencedMemo = await prompt.run();
+      const referencedMemo = await this.#memoPrompt.refer(memos);
       console.log(referencedMemo.lines.join("\n"));
     } catch (error) {
       if (error === "") {
@@ -83,29 +93,25 @@ export default class MemoApp {
   }
 
   async #delete() {
-    this.#checkExistenceMemo(this.#fileLocation);
-
-    let memos;
-    let prompt;
     try {
-      memos = await this.#createMemoObjct(this.#fileLocation);
-      prompt = this.#memoPrompt.delete(memos);
+      await this.#checkExistenceMemo(this.#fileLocation);
     } catch {
       return;
     }
 
+    let memos;
     try {
-      const deletionIndex = await prompt.run();
-      memos.splice(deletionIndex, 1);
-    } catch (error) {
-      if (error === "") {
-        console.error("program termination.");
-      } else {
-        throw error;
-      }
+      memos = await this.#createMemoObjct(this.#fileLocation);
+    } catch {
+      return;
     }
 
-    const jsonMemo = JSON.stringify(memos, null, 2);
+    const deletionMemo = await this.#memoPrompt.delete(memos);
+    const filteredMemos = memos.filter(function (memo) {
+      return memo !== deletionMemo;
+    });
+
+    const jsonMemo = JSON.stringify(filteredMemos, null, 2);
     await fs.writeFile(this.#fileLocation, jsonMemo, "utf8");
   }
 

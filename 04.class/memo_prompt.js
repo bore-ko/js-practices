@@ -1,8 +1,8 @@
 import enquirer from "enquirer";
 
 export class MemoPrompt {
-  refer(memos) {
-    return new enquirer.Select({
+  async refer(memos) {
+    const selectPrompt = new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to see:",
       footer() {
@@ -14,10 +14,12 @@ export class MemoPrompt {
         return memos[this.index];
       },
     });
+
+    return await selectPrompt.run();
   }
 
-  delete(memos) {
-    return new enquirer.Select({
+  async delete(memos) {
+    const selectPrompt = new enquirer.Select({
       name: "memo",
       message: "Choose a memo you want to delete:",
       footer() {
@@ -26,8 +28,10 @@ export class MemoPrompt {
       },
       choices: memos.map((memo) => memo.lines[0]),
       result() {
-        return this.index;
+        return memos[this.index];
       },
     });
+
+    return await selectPrompt.run();
   }
 }
