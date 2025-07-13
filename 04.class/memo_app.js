@@ -1,18 +1,17 @@
 import fs from "node:fs/promises";
 import { MemoPrompt } from "./memo_prompt.js";
-import { StandardInput } from "./standard_input.js";
+import { createInterface } from "readline/promises";
+import { once } from "events";
 
 export default class MemoApp {
   #option;
   #fileLocation;
   #memoPrompt;
-  #standardInput;
 
   constructor() {
     this.#option = process.argv[2];
     this.#fileLocation = "memos.json";
     this.#memoPrompt = new MemoPrompt();
-    this.#standardInput = new StandardInput();
   }
 
   operate() {
@@ -45,6 +44,18 @@ export default class MemoApp {
     } else {
       return memos;
     }
+  }
+
+  async #readLines() {
+    const rl = createInterface({ input: process.stdin });
+    const lines = [];
+
+    rl.on("line", (line) => {
+      lines.push(line);
+    });
+
+    await once(rl, "close");
+    return lines;
   }
 
   async #list() {
@@ -125,7 +136,7 @@ export default class MemoApp {
     }
 
     let memos = JSON.parse(json);
-    const lines = await this.#standardInput.readLines();
+    const lines = await this.#readLines();
     memos.push({ lines: lines });
 
     const jsonMemo = JSON.stringify(memos, null, 2);
