@@ -92,7 +92,7 @@ export default class MemoApp {
     }
 
     try {
-      const referencedMemo = await this.#memoPrompt.refer(memos);
+      const referencedMemo = await this.#memoPrompt.selectMemo(memos, "see");
       console.log(referencedMemo.lines.join("\n"));
     } catch (error) {
       if (error === "") {
@@ -117,7 +117,7 @@ export default class MemoApp {
       return;
     }
 
-    const deletionMemo = await this.#memoPrompt.delete(memos);
+    const deletionMemo = await this.#memoPrompt.selectMemo(memos, "delete");
     const filteredMemos = memos.filter(function (memo) {
       return memo !== deletionMemo;
     });
