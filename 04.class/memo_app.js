@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
-import { MemoPrompt } from "./memo_prompt.js";
 import { createInterface } from "readline/promises";
 import { once } from "events";
+import { MemoPrompt } from "./memo_prompt.js";
 
 export default class MemoApp {
   #option;
