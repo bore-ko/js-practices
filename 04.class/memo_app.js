@@ -117,10 +117,19 @@ export default class MemoApp {
       return;
     }
 
-    const deletionMemo = await this.#memoPrompt.selectMemo(memos, "delete");
-    const filteredMemos = memos.filter(function (memo) {
-      return memo !== deletionMemo;
-    });
+    let filteredMemos;
+    try {
+      const deletionMemo = await this.#memoPrompt.selectMemo(memos, "delete");
+      filteredMemos = memos.filter(function (memo) {
+        return memo !== deletionMemo;
+      });
+    } catch (error) {
+      if (error === "") {
+        return console.error("program termination.");
+      } else {
+        throw error;
+      }
+    }
 
     const jsonMemo = JSON.stringify(filteredMemos, null, 2);
     await fs.writeFile(this.#fileLocation, jsonMemo, "utf8");
