@@ -142,7 +142,7 @@ export default class MemoApp {
       json = JSON.stringify([], null, 2);
     }
 
-    let memos = JSON.parse(json);
+    const memos = JSON.parse(json);
     const lines = await this.#readLines();
     memos.push({ lines: lines });
 
