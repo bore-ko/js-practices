@@ -30,8 +30,7 @@ export default class MemoApp {
     try {
       await fs.access(fileLocation);
     } catch {
-      console.error("There are no memos.");
-      throw new Error();
+      throw new Error("There are no memos.");
     }
   }
 
@@ -39,8 +38,7 @@ export default class MemoApp {
     const json = await fs.readFile(fileLocation, "utf8");
     const memos = JSON.parse(json);
     if (memos.length === 0) {
-      console.error("There are no memos.");
-      throw new Error();
+      throw new Error("There are no memos.");
     } else {
       return memos;
     }
@@ -61,15 +59,15 @@ export default class MemoApp {
   async #list() {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
-    } catch {
-      return;
+    } catch (error) {
+      return console.error(error.message);
     }
 
     let memos;
     try {
       memos = await this.#createMemoObject(this.#fileLocation);
-    } catch {
-      return;
+    } catch (error) {
+      return console.error(error.message);
     }
 
     memos.forEach((memo) => {
@@ -80,15 +78,15 @@ export default class MemoApp {
   async #refer() {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
-    } catch {
-      return;
+    } catch (error) {
+      return console.error(error.message);
     }
 
     let memos;
     try {
       memos = await this.#createMemoObject(this.#fileLocation);
-    } catch {
-      return;
+    } catch (error) {
+      return console.error(error.message);
     }
 
     try {
@@ -106,15 +104,15 @@ export default class MemoApp {
   async #delete() {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
-    } catch {
-      return;
+    } catch (error) {
+      return console.error(error.message);
     }
 
     let memos;
     try {
       memos = await this.#createMemoObject(this.#fileLocation);
-    } catch {
-      return;
+    } catch (error) {
+      return console.error(error.message);
     }
 
     let filteredMemos;
