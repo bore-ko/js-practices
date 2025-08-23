@@ -159,7 +159,7 @@ export default class MemoApp {
 
     const memos = JSON.parse(json);
     const lines = await this.#readLines();
-    memos.push({ lines: lines });
+    memos.push({ lines });
 
     const jsonMemo = JSON.stringify(memos, null, 2);
     await fs.writeFile(this.#fileLocation, jsonMemo, "utf8");
