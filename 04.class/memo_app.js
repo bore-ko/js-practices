@@ -1,17 +1,15 @@
 import fs from "node:fs/promises";
 import { createInterface } from "readline/promises";
 import { once } from "events";
-import { MemoPrompt } from "./memo_prompt.js";
+import enquirer from "enquirer";
 
 export default class MemoApp {
   #option;
   #fileLocation;
-  #memoPrompt;
 
   constructor() {
     this.#option = process.argv[2];
     this.#fileLocation = "memos.json";
-    this.#memoPrompt = new MemoPrompt();
   }
 
   operate() {
@@ -42,6 +40,23 @@ export default class MemoApp {
     } else {
       return memos;
     }
+  }
+
+  async #selectMemo(memos, action) {
+    const prompt = new enquirer.Select({
+      name: "memo",
+      message: `Choose a memo you want to ${action}:`,
+      footer() {
+        const lines = memos[this.index].lines.join("\n");
+        return `\n${lines}`;
+      },
+      choices: memos.map((memo) => memo.lines[0]),
+      result() {
+        return memos[this.index];
+      },
+    });
+
+    return await prompt.run();
   }
 
   async #readLines() {
@@ -90,8 +105,8 @@ export default class MemoApp {
     }
 
     try {
-      const referencedMemo = await this.#memoPrompt.selectMemo(memos, "see");
-      console.log(referencedMemo.lines.join("\n"));
+      const selectedMemo = await this.#selectMemo(memos, "see");
+      console.log(selectedMemo.lines.join("\n"));
     } catch (error) {
       if (error === "") {
         console.error("program termination.");
@@ -117,9 +132,9 @@ export default class MemoApp {
 
     let filteredMemos;
     try {
-      const deletionMemo = await this.#memoPrompt.selectMemo(memos, "delete");
-      filteredMemos = memos.filter(function (memo) {
-        return memo !== deletionMemo;
+      const selectedMemo = await this.#selectMemo(memos, "delete");
+      filteredMemos = memos.filter((memo) => {
+        return !Object.is(memo, selectedMemo);
       });
     } catch (error) {
       if (error === "") {
