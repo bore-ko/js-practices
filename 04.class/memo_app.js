@@ -75,14 +75,16 @@ export default class MemoApp {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
     } catch (error) {
-      return console.error(error.message);
+      console.error(error.message);
+      return;
     }
 
     let memos;
     try {
       memos = await this.#createMemoObject(this.#fileLocation);
     } catch (error) {
-      return console.error(error.message);
+      console.error(error.message);
+      return;
     }
 
     memos.forEach((memo) => {
@@ -94,14 +96,16 @@ export default class MemoApp {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
     } catch (error) {
-      return console.error(error.message);
+      console.error(error.message);
+      return;
     }
 
     let memos;
     try {
       memos = await this.#createMemoObject(this.#fileLocation);
     } catch (error) {
-      return console.error(error.message);
+      console.error(error.message);
+      return;
     }
 
     try {
@@ -120,14 +124,16 @@ export default class MemoApp {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
     } catch (error) {
-      return console.error(error.message);
+      console.error(error.message);
+      return;
     }
 
     let memos;
     try {
       memos = await this.#createMemoObject(this.#fileLocation);
     } catch (error) {
-      return console.error(error.message);
+      console.error(error.message);
+      return;
     }
 
     let filteredMemos;
@@ -138,7 +144,8 @@ export default class MemoApp {
       });
     } catch (error) {
       if (error === "") {
-        return console.error("program termination.");
+        console.error("program termination.");
+        return;
       } else {
         throw error;
       }
