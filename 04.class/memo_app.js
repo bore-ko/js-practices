@@ -139,9 +139,7 @@ export default class MemoApp {
     let filteredMemos;
     try {
       const selectedMemo = await this.#selectMemo(memos, "delete");
-      filteredMemos = memos.filter((memo) => {
-        return !Object.is(memo, selectedMemo);
-      });
+      filteredMemos = memos.filter((memo) => !Object.is(memo, selectedMemo));
     } catch (error) {
       if (error === "") {
         console.error("program termination.");
