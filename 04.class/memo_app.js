@@ -32,7 +32,7 @@ export default class MemoApp {
     }
   }
 
-  async #createMemoObject(fileLocation) {
+  async #buildMemoObjectFromFile(fileLocation) {
     const json = await fs.readFile(fileLocation, "utf8");
     const memos = JSON.parse(json);
     if (memos.length === 0) {
@@ -81,7 +81,7 @@ export default class MemoApp {
 
     let memos;
     try {
-      memos = await this.#createMemoObject(this.#fileLocation);
+      memos = await this.#buildMemoObjectFromFile(this.#fileLocation);
     } catch (error) {
       console.error(error.message);
       return;
@@ -102,7 +102,7 @@ export default class MemoApp {
 
     let memos;
     try {
-      memos = await this.#createMemoObject(this.#fileLocation);
+      memos = await this.#buildMemoObjectFromFile(this.#fileLocation);
     } catch (error) {
       console.error(error.message);
       return;
@@ -130,7 +130,7 @@ export default class MemoApp {
 
     let memos;
     try {
-      memos = await this.#createMemoObject(this.#fileLocation);
+      memos = await this.#buildMemoObjectFromFile(this.#fileLocation);
     } catch (error) {
       console.error(error.message);
       return;
