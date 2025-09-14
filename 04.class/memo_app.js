@@ -59,6 +59,11 @@ export default class MemoApp {
     return await prompt.run();
   }
 
+  async #writeMemoToFile(memos, fileLocation) {
+    const jsonMemo = JSON.stringify(memos, null, 2);
+    await fs.writeFile(fileLocation, jsonMemo, "utf8");
+  }
+
   async #readLines() {
     const rl = createInterface({ input: process.stdin });
     const lines = [];
@@ -149,8 +154,7 @@ export default class MemoApp {
       }
     }
 
-    const jsonMemo = JSON.stringify(filteredMemos, null, 2);
-    await fs.writeFile(this.#fileLocation, jsonMemo, "utf8");
+    await this.#writeMemoToFile(filteredMemos, this.#fileLocation);
   }
 
   async #add() {
@@ -165,8 +169,6 @@ export default class MemoApp {
     const memos = JSON.parse(json);
     const lines = await this.#readLines();
     memos.push({ lines });
-
-    const jsonMemo = JSON.stringify(memos, null, 2);
-    await fs.writeFile(this.#fileLocation, jsonMemo, "utf8");
+    await this.#writeMemoToFile(memos, this.#fileLocation);
   }
 }
