@@ -51,12 +51,10 @@ export default class MemoApp {
         return `\n${lines}`;
       },
       choices: memos.map((memo) => memo.lines[0]),
-      result() {
-        return memos[this.index];
-      },
     });
 
-    return await prompt.run();
+    await prompt.run();
+    return [memos[prompt.index], prompt.index];
   }
 
   async #writeMemoToFile(memos, fileLocation) {
@@ -114,7 +112,7 @@ export default class MemoApp {
     }
 
     try {
-      const selectedMemo = await this.#selectMemo(memos, "see");
+      const [selectedMemo] = await this.#selectMemo(memos, "see");
       console.log(selectedMemo.lines.join("\n"));
     } catch (error) {
       if (error === "") {
@@ -143,8 +141,10 @@ export default class MemoApp {
 
     let filteredMemos;
     try {
-      const selectedMemo = await this.#selectMemo(memos, "delete");
-      filteredMemos = memos.filter((memo) => !Object.is(memo, selectedMemo));
+      const [, selectedIndex] = await this.#selectMemo(memos, "delete");
+      filteredMemos = memos.filter(
+        (_, memoIndex) => memoIndex !== selectedIndex,
+      );
     } catch (error) {
       if (error === "") {
         console.error("program termination.");
