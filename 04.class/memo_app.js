@@ -24,56 +24,6 @@ export default class MemoApp {
     }
   }
 
-  async #checkExistenceMemo(fileLocation) {
-    try {
-      await fs.access(fileLocation);
-    } catch {
-      throw new Error("There are no memos.");
-    }
-  }
-
-  async #buildMemoObjectFromFile(fileLocation) {
-    const json = await fs.readFile(fileLocation, "utf8");
-    const memos = JSON.parse(json);
-    if (memos.length === 0) {
-      throw new Error("There are no memos.");
-    } else {
-      return memos;
-    }
-  }
-
-  async #selectMemo(memos, action) {
-    const prompt = new enquirer.Select({
-      name: "memo",
-      message: `Choose a memo you want to ${action}:`,
-      footer() {
-        const lines = memos[this.index].lines.join("\n");
-        return `\n${lines}`;
-      },
-      choices: memos.map((memo) => memo.lines[0]),
-    });
-
-    await prompt.run();
-    return [memos[prompt.index], prompt.index];
-  }
-
-  async #writeMemoToFile(memos, fileLocation) {
-    const jsonMemo = JSON.stringify(memos, null, 2);
-    await fs.writeFile(fileLocation, jsonMemo, "utf8");
-  }
-
-  async #readLines() {
-    const rl = createInterface({ input: process.stdin });
-    const lines = [];
-
-    rl.on("line", (line) => {
-      lines.push(line);
-    });
-
-    await once(rl, "close");
-    return lines;
-  }
-
   async #list() {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
@@ -170,5 +120,55 @@ export default class MemoApp {
     const lines = await this.#readLines();
     memos.push({ lines });
     await this.#writeMemoToFile(memos, this.#fileLocation);
+  }
+
+  async #checkExistenceMemo(fileLocation) {
+    try {
+      await fs.access(fileLocation);
+    } catch {
+      throw new Error("There are no memos.");
+    }
+  }
+
+  async #buildMemoObjectFromFile(fileLocation) {
+    const json = await fs.readFile(fileLocation, "utf8");
+    const memos = JSON.parse(json);
+    if (memos.length === 0) {
+      throw new Error("There are no memos.");
+    } else {
+      return memos;
+    }
+  }
+
+  async #selectMemo(memos, action) {
+    const prompt = new enquirer.Select({
+      name: "memo",
+      message: `Choose a memo you want to ${action}:`,
+      footer() {
+        const lines = memos[this.index].lines.join("\n");
+        return `\n${lines}`;
+      },
+      choices: memos.map((memo) => memo.lines[0]),
+    });
+
+    await prompt.run();
+    return [memos[prompt.index], prompt.index];
+  }
+
+  async #writeMemoToFile(memos, fileLocation) {
+    const jsonMemo = JSON.stringify(memos, null, 2);
+    await fs.writeFile(fileLocation, jsonMemo, "utf8");
+  }
+
+  async #readLines() {
+    const rl = createInterface({ input: process.stdin });
+    const lines = [];
+
+    rl.on("line", (line) => {
+      lines.push(line);
+    });
+
+    await once(rl, "close");
+    return lines;
   }
 }
