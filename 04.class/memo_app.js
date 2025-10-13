@@ -34,7 +34,7 @@ export default class MemoApp {
 
     let memos;
     try {
-      memos = await this.#buildMemoObjectFromFile(this.#fileLocation);
+      memos = await this.#readMemoObjectFromFile(this.#fileLocation);
     } catch (error) {
       console.error(error.message);
       return;
@@ -55,7 +55,7 @@ export default class MemoApp {
 
     let memos;
     try {
-      memos = await this.#buildMemoObjectFromFile(this.#fileLocation);
+      memos = await this.#readMemoObjectFromFile(this.#fileLocation);
     } catch (error) {
       console.error(error.message);
       return;
@@ -83,7 +83,7 @@ export default class MemoApp {
 
     let memos;
     try {
-      memos = await this.#buildMemoObjectFromFile(this.#fileLocation);
+      memos = await this.#readMemoObjectFromFile(this.#fileLocation);
     } catch (error) {
       console.error(error.message);
       return;
@@ -110,7 +110,7 @@ export default class MemoApp {
   async #add() {
     let memos;
     try {
-      memos = await this.#buildMemoObjectFromFile(this.#fileLocation);
+      memos = await this.#readMemoObjectFromFile(this.#fileLocation);
     } catch (error) {
       if (error.message === "There are no memos." || error.code === "ENOENT") {
         memos = [];
@@ -132,7 +132,7 @@ export default class MemoApp {
     }
   }
 
-  async #buildMemoObjectFromFile(fileLocation) {
+  async #readMemoObjectFromFile(fileLocation) {
     const json = await fs.readFile(fileLocation, "utf8");
     const memos = JSON.parse(json);
     if (memos.length === 0) {
