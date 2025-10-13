@@ -108,15 +108,17 @@ export default class MemoApp {
   }
 
   async #add() {
-    let json;
+    let memos;
     try {
-      await fs.access(this.#fileLocation);
-      json = await fs.readFile(this.#fileLocation, "utf8");
-    } catch {
-      json = JSON.stringify([], null, 2);
+      memos = await this.#buildMemoObjectFromFile(this.#fileLocation);
+    } catch (error) {
+      if (error.message === "There are no memos." || error.code === "ENOENT") {
+        memos = [];
+      } else {
+        throw error;
+      }
     }
 
-    const memos = JSON.parse(json);
     const lines = await this.#readLines();
     memos.push({ lines });
     await this.#writeMemoToFile(memos, this.#fileLocation);
