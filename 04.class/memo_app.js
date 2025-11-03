@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import { createInterface } from "readline/promises";
 import { once } from "events";
+import { randomUUID } from "crypto";
 import enquirer from "enquirer";
 
 export default class MemoApp {
@@ -62,7 +63,7 @@ export default class MemoApp {
     }
 
     try {
-      const [selectedMemo] = await this.#selectMemo(memos, "see");
+      const selectedMemo = await this.#selectMemo(memos, "see");
       console.log(selectedMemo.lines.join("\n"));
     } catch (error) {
       if (error === "") {
@@ -91,10 +92,8 @@ export default class MemoApp {
 
     let filteredMemos;
     try {
-      const [, selectedIndex] = await this.#selectMemo(memos, "delete");
-      filteredMemos = memos.filter(
-        (_, memoIndex) => memoIndex !== selectedIndex,
-      );
+      const selectedMemo = await this.#selectMemo(memos, "delete");
+      filteredMemos = memos.filter((memo) => memo.id !== selectedMemo.id);
     } catch (error) {
       if (error === "") {
         console.error("program termination.");
@@ -120,7 +119,7 @@ export default class MemoApp {
     }
 
     const lines = await this.#readLines();
-    memos.push({ lines });
+    memos.push({ id: randomUUID(), lines });
     await this.#writeMemoToFile(memos, this.#fileLocation);
   }
 
@@ -154,7 +153,7 @@ export default class MemoApp {
     });
 
     await prompt.run();
-    return [memos[prompt.index], prompt.index];
+    return memos[prompt.index];
   }
 
   async #writeMemoToFile(memos, fileLocation) {
