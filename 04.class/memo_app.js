@@ -121,7 +121,7 @@ export default class MemoApp {
     try {
       await fs.access(fileLocation);
     } catch {
-      throw new Error("There are no memos.");
+      throw new Error("File not found.");
     }
   }
 
