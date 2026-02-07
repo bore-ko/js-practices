@@ -29,8 +29,11 @@ export default class MemoApp {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
     } catch (error) {
-      console.error(error.message);
-      return;
+      if (error.message === "File not found.") {
+        console.error(error.message);
+        return;
+      }
+      throw error;
     }
 
     const memos = await this.#readMemoObjectFromFile(this.#fileLocation);
@@ -48,8 +51,11 @@ export default class MemoApp {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
     } catch (error) {
-      console.error(error.message);
-      return;
+      if (error.message === "File not found.") {
+        console.error(error.message);
+        return;
+      }
+      throw error;
     }
 
     const memos = await this.#readMemoObjectFromFile(this.#fileLocation);
@@ -74,8 +80,11 @@ export default class MemoApp {
     try {
       await this.#checkExistenceMemo(this.#fileLocation);
     } catch (error) {
-      console.error(error.message);
-      return;
+      if (error.message === "File not found.") {
+        console.error(error.message);
+        return;
+      }
+      throw error;
     }
 
     const memos = await this.#readMemoObjectFromFile(this.#fileLocation);
