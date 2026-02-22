@@ -27,13 +27,14 @@ export default class MemoApp {
 
   async #list() {
     try {
-      await this.#checkExistenceMemo(this.#fileLocation);
+      await fs.access(this.#fileLocation);
     } catch (error) {
-      if (error.message === "File not found.") {
-        console.error(error.message);
+      if (error instanceof Error && error.code === "ENOENT") {
+        console.error("File not found.");
         return;
+      } else {
+        throw error;
       }
-      throw error;
     }
 
     const memos = await this.#readMemoObjectFromFile(this.#fileLocation);
@@ -49,13 +50,14 @@ export default class MemoApp {
 
   async #refer() {
     try {
-      await this.#checkExistenceMemo(this.#fileLocation);
+      await fs.access(this.#fileLocation);
     } catch (error) {
-      if (error.message === "File not found.") {
-        console.error(error.message);
+      if (error instanceof Error && error.code === "ENOENT") {
+        console.error("File not found.");
         return;
+      } else {
+        throw error;
       }
-      throw error;
     }
 
     const memos = await this.#readMemoObjectFromFile(this.#fileLocation);
@@ -78,13 +80,14 @@ export default class MemoApp {
 
   async #delete() {
     try {
-      await this.#checkExistenceMemo(this.#fileLocation);
+      await fs.access(this.#fileLocation);
     } catch (error) {
-      if (error.message === "File not found.") {
-        console.error(error.message);
+      if (error instanceof Error && error.code === "ENOENT") {
+        console.error("File not found.");
         return;
+      } else {
+        throw error;
       }
-      throw error;
     }
 
     const memos = await this.#readMemoObjectFromFile(this.#fileLocation);
@@ -124,14 +127,6 @@ export default class MemoApp {
     const lines = await this.#readLines();
     memos.push({ id: randomUUID(), lines });
     await this.#writeMemoToFile(memos, this.#fileLocation);
-  }
-
-  async #checkExistenceMemo(fileLocation) {
-    try {
-      await fs.access(fileLocation);
-    } catch {
-      throw new Error("File not found.");
-    }
   }
 
   async #readMemoObjectFromFile(fileLocation) {
