@@ -96,10 +96,9 @@ export default class MemoApp {
       return;
     }
 
-    let filteredMemos;
+    let selectedMemo;
     try {
-      const selectedMemo = await this.#selectMemo(memos, "delete");
-      filteredMemos = memos.filter((memo) => memo.id !== selectedMemo.id);
+      selectedMemo = await this.#selectMemo(memos, "delete");
     } catch (error) {
       if (error === "") {
         console.error("program termination.");
@@ -109,6 +108,7 @@ export default class MemoApp {
       }
     }
 
+    const filteredMemos = memos.filter((memo) => memo.id !== selectedMemo.id);
     await this.#writeMemoToFile(filteredMemos, this.#fileLocation);
   }
 
